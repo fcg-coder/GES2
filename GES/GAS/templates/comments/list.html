@@ -1,0 +1,68 @@
+{%extends 'base.html'%}
+
+{%block title %} Sddfg {%endblock%}
+
+
+{%block content%} 
+
+<div style="display: flex;
+height: 100vh;
+flex-wrap: nowrap;
+flex-direction: column;
+justify-content: center;align-items: center;">
+
+<div class="form" style="display: flex; justify-content: center;">
+    <form style= "    display: flex;
+    flex-direction: column;" method="post" action="{% url 'comments:leave_comment' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- Текстовый комментарий -->
+        <textarea name="comment_text"></textarea>
+        
+        <!-- Загрузка файла -->
+        <input type="file" name="document">
+        
+        <!-- Кнопка отправки формы -->
+        <button type="submit">Отправить</button>
+      </form>
+
+</div>
+
+<div class="content" style="display: flex; justify-content: center;display: flex;
+justify-content: center;
+
+    flex-direction: column;">
+
+  
+  
+{% for a in obj %}
+<div style="padding: 14px; margin: 13px;  background-color: #e8e8e8;
+border-radius: 20px;">
+         {% if a.comment_text %}
+        <p>Коментарий:<br> {{ a.comment_text }}</p><br>
+
+        {% endif %}
+        {% if a.document %}
+        <p>
+            Документ:<br> 
+            <a href="{{ a.document.url }}"> {{ a.documentName }}</a>
+        </p>
+        {% endif %}
+        {% if a.photo %}
+        <img src="{{ a.photo.url }}" alt="Фото комментария">
+        {% endif %}
+
+        <p>Дата создания:<br> {{ a.pub_date }}</p>
+  
+</div>
+
+
+{% endfor %}   
+
+
+
+</div>
+
+
+</div>
+
+{%endblock%}
