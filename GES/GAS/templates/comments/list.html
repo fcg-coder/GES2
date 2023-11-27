@@ -43,18 +43,19 @@ border-radius: 20px;">
         {% endif %}
         {% if a.document %}
         <p>
+            {% if a.document.is_image_file == TRUE %}
+            <img src="{{ a.document.url }}" alt="Фото комментария" style="width: 200px; height: auto;">
+            {% else %}
             Документ:<br> 
             <a href="{{ a.document.url }}"> {{ a.documentName }}</a>
+            {% endif %}
         </p>
         {% endif %}
-        {% if a.photo %}
-        <img src="{{ a.photo.url }}" alt="Фото комментария">
-        {% endif %}
+        
 
         <p>Дата создания:<br> {{ a.pub_date }}</p>
   
 </div>
-
 
 {% endfor %}   
 

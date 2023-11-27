@@ -1,5 +1,5 @@
 from django.db import models
-
+import os
 
 #Здесь будут описываться классы(один) коментариев 
 class Comment(models.Model):
@@ -10,6 +10,15 @@ class Comment(models.Model):
     photo = models.ImageField('Фото')
     documentName = models.CharField('Имя фото', max_length= 50)
 
+
+    def is_image_file(file_path):
+        image_extensions = ['.jpg', '.jpeg', '.png', '.gif']
+        file_extension = os.path.splitext(file_path)[1].lower()
+
+        if file_extension in image_extensions:
+            return True
+        else:
+            return False
 
     def __str__(self):
         return self.comment_text
