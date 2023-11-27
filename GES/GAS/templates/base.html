@@ -1,12 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link scr="style.css" rel="stylesheet">
-    <title>{%block title %}SITE {%endblock%}</title>
+    <title>Страница с прямоугольниками</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+        }
+        .intro{
+            display: flex;
+            flex-direction: column;
+        }
+        .rectangle {
+            width: 200px;
+            height: 100px;
+            margin: 0 auto;
+            margin-top: 50px;
+            margin: 10px;
+        }
+        .red {
+            background-color: red;
+        }
+        .blue {
+            background-color: blue;
+        }
+        .green {
+            background-color: green;
+        }
+        .yellow {
+            background-color: yellow;
+        }
+    </style>
 </head>
 <body>
-    {%block content%} {%endblock%}
+<div class="intro">
+    <a href="{% url 'map:next_page' idToNewPage=1 %}">
+    <div class="rectangle red">
+    </div></a>
+
+
+    <a href="{% url 'map:next_page' idToNewPage=2 %}">
+    <div class="rectangle blue">
+
+    </div> </a>
+
+    <a href="{% url 'map:next_page' idToNewPage=3 %}">
+    <div class="rectangle green">
+        
+  
+   
+    </div>  </a>
+
+    <a href="{% url 'map:next_page' idToNewPage=4 %}">
+    <div class="rectangle yellow">
+    
+    </div>
+
+</a>
+</div>
 </body>
 </html>

@@ -7,8 +7,7 @@ class Comment(models.Model):
     pub_date = models.DateTimeField('Дата публикации')
     document = models.FileField(upload_to='documents/')
     documentName = models.CharField('Имя файла', max_length= 50)
-    photo = models.ImageField('Фото')
-    documentName = models.CharField('Имя фото', max_length= 50)
+    idOfPage = models.IntegerField('Id страницы')
 
 
     def is_image_file(file_path):

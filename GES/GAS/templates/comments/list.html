@@ -1,10 +1,12 @@
-{%extends 'base.html'%}
-
-{%block title %} Sddfg {%endblock%}
-
-
-{%block content%} 
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
 <div style="display: flex;
 height: 100vh;
 flex-wrap: nowrap;
@@ -12,9 +14,8 @@ flex-direction: column;
 justify-content: center;align-items: center;">
 
 <div class="form" style="display: flex; justify-content: center;">
-    <form style= "    display: flex;
-    flex-direction: column;" method="post" action="{% url 'comments:leave_comment' %}" enctype="multipart/form-data">
-        {% csrf_token %}
+    <form style="display: flex; flex-direction: column;" method="post" action="{% url 'comments:leave_comment' idOfPage %}" enctype="multipart/form-data">
+                     {% csrf_token %}
         <!-- Текстовый комментарий -->
         <textarea name="comment_text"></textarea>
         
@@ -32,38 +33,30 @@ justify-content: center;
 
     flex-direction: column;">
 
-  
-  
 {% for a in obj %}
-<div style="padding: 14px; margin: 13px;  background-color: #e8e8e8;
-border-radius: 20px;">
-         {% if a.comment_text %}
-        <p>Коментарий:<br> {{ a.comment_text }}</p><br>
-
+{% if a.id == idOfPage %}
+    <div style="padding: 14px; margin: 13px; background-color: #e8e8e8; border-radius: 20px;">
+        {% if a.comment_text %}
+            <p>Коментарий:<br> {{ a.comment_text }}</p><br>
         {% endif %}
         {% if a.document %}
-        <p>
-            {% if a.document.is_image_file == TRUE %}
-            <img src="{{ a.document.url }}" alt="Фото комментария" style="width: 200px; height: auto;">
-            {% else %}
-            Документ:<br> 
-            <a href="{{ a.document.url }}"> {{ a.documentName }}</a>
-            {% endif %}
-        </p>
+            <p>
+                {% if a.document.is_image_file == TRUE %}
+                    <img src="{{ a.document.url }}" alt="Фото комментария" style="width: 200px; height: auto;">
+                {% else %}
+                    Документ:<br> 
+                    <a href="{{ a.document.url }}"> {{ a.documentName }}</a>
+                {% endif %}
+            </p>
         {% endif %}
-        
-
         <p>Дата создания:<br> {{ a.pub_date }}</p>
-  
-</div>
-
-{% endfor %}   
-
-
+    </div>
+{% endif %}
+{% endfor %}
 
 </div>
 
 
 </div>
-
-{%endblock%}
+</body>
+</html>
