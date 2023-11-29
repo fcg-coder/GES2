@@ -21,6 +21,11 @@ def leave_comment(request, idOfPage):
             documentName = document.name
         else:
             documentName = ''
+            if comment_text == '':
+                return redirect('comments:index', idOfPage=Pageid)
+    
+        
+       
         comment = Comment(comment_text=comment_text, document=document,
         documentName = documentName, idOfPage = Pageid)
         comment.pub_date = timezone.now()  # добавляем значение для поля pub_date

@@ -33,25 +33,25 @@ justify-content: center;
 
     flex-direction: column;">
 
-{% for a in obj %}
-{% if a.id == idOfPage %}
-    <div style="padding: 14px; margin: 13px; background-color: #e8e8e8; border-radius: 20px;">
-        {% if a.comment_text %}
-            <p>Коментарий:<br> {{ a.comment_text }}</p><br>
-        {% endif %}
-        {% if a.document %}
-            <p>
-                {% if a.document.is_image_file == TRUE %}
-                    <img src="{{ a.document.url }}" alt="Фото комментария" style="width: 200px; height: auto;">
-                {% else %}
-                    Документ:<br> 
-                    <a href="{{ a.document.url }}"> {{ a.documentName }}</a>
-                {% endif %}
-            </p>
-        {% endif %}
-        <p>Дата создания:<br> {{ a.pub_date }}</p>
-    </div>
-{% endif %}
+  {% for a in obj %}
+    {% if a.idOfPage == idOfPage %}
+        <div style="padding: 14px; margin: 13px; background-color: #e8e8e8; border-radius: 20px;">
+            {% if a.comment_text %}
+                <p>Коментарий:<br> {{ a.comment_text }}</p><br>
+            {% endif %}
+            {% if a.document %}
+                <p>
+                    {% if a.document.is_image_file == TRUE %}
+                        <img src="{{ a.document.url }}" alt="Фото комментария" style="width: 200px; height: auto;">
+                    {% else %}
+                        Документ:<br> 
+                        <a href="{{ a.document.url }}"> {{ a.documentName }}</a>
+                    {% endif %}
+                </p>
+            {% endif %}
+            <p>Дата создания:<br> {{ a.pub_date }}</p>
+        </div>
+    {% endif %}
 {% endfor %}
 
 </div>

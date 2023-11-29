@@ -9,7 +9,6 @@ class Comment(models.Model):
     documentName = models.CharField('Имя файла', max_length= 50)
     idOfPage = models.IntegerField('Id страницы')
 
-
     def is_image_file(file_path):
         image_extensions = ['.jpg', '.jpeg', '.png', '.gif']
         file_extension = os.path.splitext(file_path)[1].lower()

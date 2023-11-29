@@ -16,4 +16,4 @@ def index(request):
 def next_page(request, idToNewPage):
     id = int(idToNewPage)
     newPage = MAP(id=id)
-    return redirect('comments:index', id=id)
+    return redirect('comments:index', idOfPage=id)
