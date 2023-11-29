@@ -8,14 +8,15 @@
 <body>
     
 <div style="display: flex;
-height: 100vh;
+
 flex-wrap: nowrap;
 flex-direction: column;
 justify-content: center;align-items: center;">
 
 <div class="form" style="display: flex; justify-content: center;">
     <form style="display: flex; flex-direction: column;" method="post" action="{% url 'comments:leave_comment' idOfPage %}" enctype="multipart/form-data">
-                     {% csrf_token %}
+        {% csrf_token %}
+        <input type="text" id="usernameInput" name="username" value="{{ username }}" required>
         <!-- Текстовый комментарий -->
         <textarea name="comment_text"></textarea>
         
@@ -25,17 +26,24 @@ justify-content: center;align-items: center;">
         <!-- Кнопка отправки формы -->
         <button type="submit">Отправить</button>
       </form>
+    
 
 </div>
+
 
 <div class="content" style="display: flex; justify-content: center;display: flex;
 justify-content: center;
 
     flex-direction: column;">
 
-  {% for a in obj %}
+  {% for a in obj  reversed %}
     {% if a.idOfPage == idOfPage %}
         <div style="padding: 14px; margin: 13px; background-color: #e8e8e8; border-radius: 20px;">
+            
+            
+            <p>Имя:<br> {{ a.username }}</p><br>
+
+            
             {% if a.comment_text %}
                 <p>Коментарий:<br> {{ a.comment_text }}</p><br>
             {% endif %}
@@ -55,8 +63,6 @@ justify-content: center;
 {% endfor %}
 
 </div>
-
-
 </div>
 </body>
 </html>

@@ -8,7 +8,8 @@ class Comment(models.Model):
     document = models.FileField(upload_to='documents/')
     documentName = models.CharField('Имя файла', max_length= 50)
     idOfPage = models.IntegerField('Id страницы')
-
+    username = models.CharField('Имя пользователя', max_length= 25)
+    adminNameComment = models.TextField('Имя объекта')
     def is_image_file(file_path):
         image_extensions = ['.jpg', '.jpeg', '.png', '.gif']
         file_extension = os.path.splitext(file_path)[1].lower()
@@ -19,7 +20,7 @@ class Comment(models.Model):
             return False
 
     def __str__(self):
-        return self.comment_text
+        return self.adminNameComment
     
     
     
