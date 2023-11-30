@@ -17,6 +17,8 @@ justify-content: center;align-items: center;">
     <form style="display: flex; flex-direction: column;" method="post" action="{% url 'comments:leave_comment' idOfPage %}" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="text" id="usernameInput" name="username" value="{{ username }}" required>
+       
+         
         <!-- Текстовый комментарий -->
         <textarea name="comment_text"></textarea>
         
@@ -42,6 +44,7 @@ justify-content: center;
             
             
             <p>Имя:<br> {{ a.username }}</p><br>
+           
 
             
             {% if a.comment_text %}
