@@ -9,7 +9,8 @@ def index(request, idOfPage):
     idOfPage = int(idOfPage)
     obj = Comment.objects.all()
     username = request.session.get('username')
-    return render(request, 'comments/list.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username} )
+    nowTime = timezone.localtime(timezone.now(), timezone.get_current_timezone())
+    return render(request, 'comments/list.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime} )
 
 @csrf_exempt
 def leave_comment(request, idOfPage):

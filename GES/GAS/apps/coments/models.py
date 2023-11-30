@@ -10,11 +10,16 @@ class Comment(models.Model):
     idOfPage = models.IntegerField('Id страницы')
     username = models.CharField('Имя пользователя', max_length= 25)
     adminNameComment = models.TextField('Имя объекта')
-    def is_image_file(file_path):
-        image_extensions = ['.jpg', '.jpeg', '.png', '.gif']
-        file_extension = os.path.splitext(file_path)[1].lower()
+    
+    def is_image_file(self):
+        # Получаем расширение файла
+        _, file_extension = os.path.splitext(self.document.path)
 
-        if file_extension in image_extensions:
+        # Список расширений файлов изображений
+        image_extensions = ['.jpg', '.jpeg', '.png', '.gif']
+
+        # Проверяем, является ли расширение файла изображением
+        if file_extension.lower() in image_extensions:
             return True
         else:
             return False

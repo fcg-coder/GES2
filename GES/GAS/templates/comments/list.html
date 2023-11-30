@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
@@ -43,16 +44,16 @@ justify-content: center;
         <div style="padding: 14px; margin: 13px; background-color: #e8e8e8; border-radius: 20px;">
             
             
-            <p>Имя:<br> {{ a.username }}</p><br>
+            <div>Имя: {{ a.username }}  <p class="timeAgo">{{ a.pub_date|timesince:nowTime }} назад</p> </div>
            
 
             
             {% if a.comment_text %}
-                <p>Коментарий:<br> {{ a.comment_text }}</p><br>
+                <p>Коментарий:  {{ a.comment_text }}</p><br>
             {% endif %}
             {% if a.document %}
                 <p>
-                    {% if a.document.is_image_file == TRUE %}
+                    {% if a.is_image_file %}
                         <img src="{{ a.document.url }}" alt="Фото комментария" style="width: 200px; height: auto;">
                     {% else %}
                         Документ:<br> 
@@ -60,7 +61,8 @@ justify-content: center;
                     {% endif %}
                 </p>
             {% endif %}
-            <p>Дата создания:<br> {{ a.pub_date }}</p>
+            <!-- <p>Дата создания:<br> {{ a.pub_date }}</p> -->
+            
         </div>
     {% endif %}
 {% endfor %}
