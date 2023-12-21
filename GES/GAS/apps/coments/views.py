@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import FileCommentForm
 
 def index(request, idOfPage):
+    
     idOfPage = int(idOfPage)
     obj = Comment.objects.all()
     username = request.session.get('username')
