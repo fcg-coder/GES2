@@ -37,3 +37,5 @@ def newPage(request):
     else:
         pages = MAP.objects.all()
         return redirect('map:index')
+    
+

@@ -6,12 +6,15 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import FileCommentForm
 
 def index(request, idOfPage):
-    
+    idOfPage = int(idOfPage)
+    map_instance = MAP.objects.get(id=idOfPage)  # Используйте 'id' вместо 'idOfPage'
+    nameOfPage = map_instance.nameOfPage
+    print(nameOfPage, 'имя страницы')
     idOfPage = int(idOfPage)
     obj = Comment.objects.all()
     username = request.session.get('username')
     nowTime = timezone.localtime(timezone.now(), timezone.get_current_timezone())
-    return render(request, 'comments/list.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime} )
+    return render(request, 'comments/list.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage} )
 
 @csrf_exempt
 def leave_comment(request, idOfPage):
