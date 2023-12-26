@@ -10,7 +10,8 @@ app_name = 'map'
 
 urlpatterns = [
     path('', views.index , name='index'),
-    path('next_page/<int:idToNewPage>/', views.next_page, name='next_page'),
+    path('next_page/<int:idToNewPage>/<str:nameOfPage>/', views.next_page, name='next_page'),
+    path('newPage/', views.newPage, name='newPage'),
 
    
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

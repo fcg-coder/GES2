@@ -38,7 +38,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django_cleanup.apps.CleanupConfig',
     'map',
     'coments.apps.ComentsConfig',
     'django.contrib.admin',

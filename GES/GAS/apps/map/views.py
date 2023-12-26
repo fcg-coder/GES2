@@ -9,11 +9,34 @@ from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     id = int(0)
-    return render(request, 'base.html')
+    pages = MAP.objects.all()
+    #for page in pages:
+     #   print(page.id)
+    return render(request, 'base.html',{'pages': pages } )
 
 
 @csrf_exempt
-def next_page(request, idToNewPage):
+def next_page(request, idToNewPage, nameOfPage):
     id = int(idToNewPage)
-    newPage = MAP(id=id)
+    nameOfPage = nameOfPage
+    newPage = MAP(id=id, nameOfPage = nameOfPage)
+    newPage.status = 'published'
+    newPage.save()
     return redirect('comments:index', idOfPage=id)
+
+
+#ДОБАВИТЬ КАВЕР 
+def newPage(request):
+    if request.method == 'POST':
+        nameOfPage = request.POST.get('nameOfPage')
+        pages = MAP.objects.all()
+        max_index = max(pages, key=lambda x: x.id)
+        page = MAP(nameOfPage=nameOfPage, id=max_index.id+1, status = 'pending')
+        page.save()
+        pages = MAP.objects.all()
+        return redirect('map:index')
+    else:
+        pages = MAP.objects.all()
+        return redirect('map:index')
+    
+

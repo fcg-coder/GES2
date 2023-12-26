@@ -5,7 +5,7 @@ import os
 class Comment(models.Model):
     comment_text = models.TextField('Коментарий')
     pub_date = models.DateTimeField('Дата публикации')
-    document = models.FileField(upload_to='documents/', null=True)
+    document = models.FileField(upload_to='documents/')
     documentName = models.CharField('Имя файла', max_length= 50)
     idOfPage = models.IntegerField('Id страницы')
     username = models.CharField('Имя пользователя', max_length= 25)
