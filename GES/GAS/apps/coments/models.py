@@ -1,5 +1,6 @@
 from django.db import models
 import os
+from map.models import MAP
 
 #Здесь будут описываться классы(один) коментариев 
 class Comment(models.Model):
@@ -8,6 +9,7 @@ class Comment(models.Model):
     document = models.FileField(upload_to='documents/')
     documentName = models.CharField('Имя файла', max_length= 50)
     idOfPage = models.IntegerField('Id страницы')
+    cat = models.ForeignKey(MAP, on_delete=models.CASCADE)
     username = models.CharField('Имя пользователя', max_length= 25)
     adminNameComment = models.TextField('Имя объекта')
     

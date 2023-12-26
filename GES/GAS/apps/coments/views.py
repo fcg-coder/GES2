@@ -44,7 +44,7 @@ def leave_comment(request, idOfPage):
         
        
         comment = Comment(username = username, comment_text=comment_text, document=document,
-        documentName = documentName, idOfPage = Pageid, adminNameComment = adminNameComment)
+        documentName = documentName, idOfPage = Pageid, adminNameComment = adminNameComment, cat_id = idOfPage)
         comment.pub_date = timezone.now()  # добавляем значение для поля pub_date
         comment.save()
         return redirect('comments:index', idOfPage=Pageid) # Если ни комментария, ни файла нет, возвращаем ошибку или делаем что-то другое по вашему усмотрению
