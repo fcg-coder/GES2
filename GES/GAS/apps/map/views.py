@@ -19,7 +19,7 @@ def index(request):
 def next_page(request, idToNewPage, nameOfPage):
     id = int(idToNewPage)
     nameOfPage = nameOfPage
-    newPage = MAP(id=id, nameOfPage = nameOfPage)
+    newPage = MAP(id=id, nameOfPage = nameOfPage, status = 'published')
     newPage.save()
     return redirect('comments:index', idOfPage=id)
 
@@ -30,7 +30,7 @@ def newPage(request):
         nameOfPage = request.POST.get('nameOfPage')
         pages = MAP.objects.all()
         max_index = max(pages, key=lambda x: x.id)
-        page = MAP(nameOfPage=nameOfPage, id=max_index.id+1)
+        page = MAP(nameOfPage=nameOfPage, id=max_index.id+1, status = 'pending')
         page.save()
         pages = MAP.objects.all()
         return redirect('map:index')
