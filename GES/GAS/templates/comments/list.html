@@ -49,8 +49,11 @@ justify-content: center;align-items: center;">
         {% if page.status == 'published' %}
             <a href="{% url 'map:next_page' idToNewPage=page.id nameOfPage=page.nameOfPage %}">
                 <div class="rectangle red">
+                    
                 </div>
+             
             </a>
+            {{page.nameOfPage}}
         {% endif %}
     {% endfor %}
 </div>

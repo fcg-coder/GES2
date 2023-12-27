@@ -39,8 +39,10 @@
         {% if page.status == 'published' and page.FlagForThePresenceOfAParent == 0%}
             <a href="{% url 'map:next_page' idToNewPage=page.id nameOfPage=page.nameOfPage %}">
                 <div class="rectangle red">
+                    
                 </div>
             </a>
+            {{page.nameOfPage}}
             {% endif %}
         {% endfor %}
     </div>
