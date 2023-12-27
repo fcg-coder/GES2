@@ -2,14 +2,14 @@ from django.contrib import admin
 from .models import MAP
 
 class MAPAdmin(admin.ModelAdmin):
-    list_display = ('nameOfPage', 'idOfPage', 'status')  # Отображаемые поля в списке объектов
-    list_filter = ('status',)  # Фильтр по полю статус
-    search_fields = ('nameOfPage',)  # Поиск по полю имя страницы
-    readonly_fields = ('idOfPage',)  # Поля только для чтения
+    list_display = ('nameOfPage', 'id', 'status', 'FlagForInternalRecordings','FlagForThePresenceOfAParent')
+    list_filter = ('status', 'FlagForInternalRecordings')
+    search_fields = ('nameOfPage',)
+    filter_horizontal = ('internal_pages',)
 
     fieldsets = (
         ('Основная информация', {
-            'fields': ('idOfPage', 'nameOfPage', 'status'),
+            'fields': ( 'nameOfPage', 'status', 'FlagForInternalRecordings','FlagForThePresenceOfAParent', 'internal_pages'),
         }),
     )
 

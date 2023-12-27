@@ -9,12 +9,15 @@ def index(request, idOfPage):
     idOfPage = int(idOfPage)
     map_instance = MAP.objects.get(id=idOfPage)  # Используйте 'id' вместо 'idOfPage'
     nameOfPage = map_instance.nameOfPage
-    print(nameOfPage, 'имя страницы')
+    map_internal_pages = map_instance.internal_pages.all()
+   
+
+    print(map_internal_pages)
     idOfPage = int(idOfPage)
     obj = Comment.objects.all()
     username = request.session.get('username')
     nowTime = timezone.localtime(timezone.now(), timezone.get_current_timezone())
-    return render(request, 'comments/list.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage} )
+    return render(request, 'comments/list.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
 
 @csrf_exempt
 def leave_comment(request, idOfPage):

@@ -18,21 +18,29 @@ def index(request):
 @csrf_exempt
 def next_page(request, idToNewPage, nameOfPage):
     id = int(idToNewPage)
+    map_obj = MAP.objects.get(id = idToNewPage)
+    FlagForInternalRecordingsPAGE = map_obj.FlagForInternalRecordings
+
+    FlagForThePresenceOfAParentPAGE = map_obj.FlagForThePresenceOfAParent
     nameOfPage = nameOfPage
-    newPage = MAP(id=id, nameOfPage = nameOfPage, status = 'published')
+    newPage = MAP(id=id, nameOfPage = nameOfPage, status = 'published', FlagForThePresenceOfAParent = FlagForThePresenceOfAParentPAGE, FlagForInternalRecordings = FlagForInternalRecordingsPAGE)
     newPage.save()
     return redirect('comments:index', idOfPage=id)
 
 
 #ДОБАВИТЬ КАВЕР 
-def newPage(request):
+def newPage(request, idOfPage):
     if request.method == 'POST':
+        map_instance = MAP.objects.get(id=idOfPage)
+        map_instance.FlagForInternalRecordings = 1
+        map_instance.save()
         nameOfPage = request.POST.get('nameOfPage')
         pages = MAP.objects.all()
-        max_index = max(pages, key=lambda x: x.id)
-        page = MAP(nameOfPage=nameOfPage, id=max_index.id+1, status = 'pending')
+        max_index = max(pages, key=lambda x: x.id) 
+        page = MAP(nameOfPage=nameOfPage, id=max_index.id+1, status = 'pending', FlagForThePresenceOfAParent=1)
         page.save()
         pages = MAP.objects.all()
+        map_instance.internal_pages.add(page.id)
         return redirect('map:index')
     else:
         pages = MAP.objects.all()

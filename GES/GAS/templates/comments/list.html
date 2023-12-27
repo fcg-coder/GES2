@@ -5,7 +5,37 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ nameOfPage }}</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+        }
+        .intro{
+            display: flex;
+            flex-direction: column;
+        }
+        .rectangle {
+            width: 200px;
+            height: 100px;
+            margin: 0 auto;
+            margin-top: 50px;
+            margin: 10px;
+        }
+        .red {
+            background-color: red;
+        }
+        .blue {
+            background-color: blue;
+        }
+        .green {
+            background-color: green;
+        }
+        .yellow {
+            background-color: yellow;
+        }
+    </style>
 </head>
+
 <body>
     
 <div style="display: flex;
@@ -13,6 +43,29 @@
 flex-wrap: nowrap;
 flex-direction: column;
 justify-content: center;align-items: center;">
+
+<div class="intro">
+    {% for page in map_internal_pages %}
+        {% if page.status == 'published' %}
+            <a href="{% url 'map:next_page' idToNewPage=page.id nameOfPage=page.nameOfPage %}">
+                <div class="rectangle red">
+                </div>
+            </a>
+        {% endif %}
+    {% endfor %}
+</div>
+<div class="form" style="display: flex; justify-content: center;">
+    <form style="display: flex; flex-direction: column;" method="post" action="{% url 'map:newPage'  idOfPage %}">
+        {% csrf_token %}
+        <label for="nameOfPage">Имя страницы:</label>
+        <input type="text" id="nameOfPage" name="nameOfPage">
+        <input type="submit" value="Создать">
+      </form>
+
+
+
+</div>
+
 
 <div class="form" style="display: flex; justify-content: center;">
     <form style="display: flex; flex-direction: column;" method="post" action="{% url 'comments:leave_comment' idOfPage %}" enctype="multipart/form-data">

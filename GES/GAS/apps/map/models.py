@@ -5,6 +5,10 @@ class MAP(models.Model):
     id = models.Index('id', name='Id страницы')
     idOfPage = id
     page_id = id
+    FlagForInternalRecordings= models.IntegerField('Флаг на наличие внутренних записей', default=0)
+
+    FlagForThePresenceOfAParent = models.IntegerField('Флаг на наличие родителя', default=0)
+    internal_pages = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='related_pages')
     STATUS_CHOICES = (
         ('pending', 'На рассмотрении'),
         ('published', 'Опубликовано'),
