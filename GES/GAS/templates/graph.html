@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отображение графа</title>
+    <!-- Подключение библиотеки vis.js -->
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style>
+        /* Стили для контейнера, в котором будет отображаться граф */
+        #graph-container {
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Отображение графа</h1>
+    <div id="graph-container"></div>
+
+    <script>
+        // Создание объекта с данными графа
+        const nodes = new vis.DataSet([
+            {% for node_id, node_data in G.nodes.items %}
+                { id: {{ node_id }}, label: "{{ node_data.name }}" },
+            {% endfor %}
+        ]);
+
+        const edges = new vis.DataSet([
+            {% for edge in G.edges %}
+                { from: {{ edge.0 }}, to: {{ edge.1 }} },
+            {% endfor %}
+        ]);
+
+        const data = {
+            nodes: nodes,
+            edges: edges
+        };
+
+        // Опции для отображения графа
+        const options = {
+            layout: {
+                hierarchical: {
+                    direction: "UD",
+                    sortMethod: "directed"
+                }
+            }
+        };
+
+        // Создание экземпляра графа и его отображение
+        const container = document.getElementById("graph-container");
+        const network = new vis.Network(container, data, options);
+    </script>
+</body>
+</html>
