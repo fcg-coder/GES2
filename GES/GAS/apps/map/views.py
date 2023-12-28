@@ -46,4 +46,22 @@ def newPage(request, idOfPage):
         pages = MAP.objects.all()
         return redirect('map:index')
     
+def graph(request):
+    G = nx.Graph()
+    instances = MAP.objects.all()
+
+    # Добавление узлов и связей в граф
+    for instance in instances:
+        G.add_node(instance.id, name=instance.nameOfPage)  # Добавляем узел с атрибутом name
+        for related_instance in instance.internal_pages.all():
+            G.add_node(related_instance.id, name=related_instance.nameOfPage)  # Добавляем связанный узел
+            G.add_edge(instance.id, related_instance.id)
+
+    print(G)
+    return render(request, 'graph.html', {'G': G })
+
+
+
+
+
 
