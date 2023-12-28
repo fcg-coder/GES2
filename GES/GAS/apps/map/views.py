@@ -7,6 +7,17 @@ from coments.models import Comment
 
 from django.views.decorators.csrf import csrf_exempt
 
+
+
+import networkx as nx
+from django.apps import apps
+import matplotlib.pyplot as plt
+import pickle
+
+
+
+
+
 def index(request):
     id = int(0)
     pages = MAP.objects.all()
