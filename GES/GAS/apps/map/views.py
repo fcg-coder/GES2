@@ -5,6 +5,8 @@ from requests import post
 from map.models import MAP
 from coments.models import Comment
 
+from django.utils import timezone
+
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -27,16 +29,29 @@ def index(request):
 
 
 @csrf_exempt
-def next_page(request, idToNewPage, nameOfPage):
+def next_page(request, idToNewPage):
+    
+
+
+    map_instance = MAP.objects.get(id=idToNewPage)  # Используйте 'id' вместо 'idOfPage'
+    nameOfPage = map_instance.nameOfPage
+    map_internal_pages = map_instance.internal_pages.all()
+   
+    idOfPage = int(idToNewPage)
+    obj = Comment.objects.all()
+    username = request.session.get('username')
+    nowTime = timezone.localtime(timezone.now(), timezone.get_current_timezone())
+
     id = int(idToNewPage)
     map_obj = MAP.objects.get(id = idToNewPage)
     FlagForInternalRecordingsPAGE = map_obj.FlagForInternalRecordings
 
     FlagForThePresenceOfAParentPAGE = map_obj.FlagForThePresenceOfAParent
-    nameOfPage = nameOfPage
     newPage = MAP(id=id, nameOfPage = nameOfPage, status = 'published', FlagForThePresenceOfAParent = FlagForThePresenceOfAParentPAGE, FlagForInternalRecordings = FlagForInternalRecordingsPAGE)
     newPage.save()
-    return redirect('comments:index', idOfPage=id)
+
+    
+    return render(request, 'comments/list.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
 
 
 #ДОБАВИТЬ КАВЕР 

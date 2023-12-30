@@ -11,13 +11,11 @@ def index(request, idOfPage):
     nameOfPage = map_instance.nameOfPage
     map_internal_pages = map_instance.internal_pages.all()
    
-
-    print(map_internal_pages)
     idOfPage = int(idOfPage)
     obj = Comment.objects.all()
     username = request.session.get('username')
     nowTime = timezone.localtime(timezone.now(), timezone.get_current_timezone())
-    return render(request, 'comments/list.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
+    return render(request, '', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
 
 @csrf_exempt
 def leave_comment(request, idOfPage):

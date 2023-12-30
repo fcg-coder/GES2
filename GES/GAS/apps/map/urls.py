@@ -10,7 +10,7 @@ app_name = 'map'
 
 urlpatterns = [
     path('', views.index , name='index'),
-    path('next_page/<int:idToNewPage>/<str:nameOfPage>/', views.next_page, name='next_page'),
+    path('<int:idToNewPage>/', views.next_page, name='next_page'),
     path('newPage/<int:idOfPage>/', views.newPage, name='newPage'),
     path('graph/', views.graph, name='graph'),
 
