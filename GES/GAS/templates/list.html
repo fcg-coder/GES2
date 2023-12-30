@@ -9,6 +9,7 @@
         body{
             display: flex;
             justify-content: center;
+            
         }
         .intro{
             display: flex;
@@ -44,30 +45,6 @@ flex-wrap: nowrap;
 flex-direction: column;
 justify-content: center;align-items: center;">
 
-<div class="intro">
-    {% for page in map_internal_pages %}
-        {% if page.status == 'published' %}
-            <a href="{% url 'map:next_page' idToNewPage=page.id  %}">
-                <div class="rectangle red">
-                    
-                </div>
-             
-            </a>
-            {{page.nameOfPage}}
-        {% endif %}
-    {% endfor %}
-</div>
-<div class="form" style="display: flex; justify-content: center;">
-    <form style="display: flex; flex-direction: column;" method="post" action="{% url 'map:newPage'  idOfPage %}">
-        {% csrf_token %}
-        <label for="nameOfPage">Имя страницы:</label>
-        <input type="text" id="nameOfPage" name="nameOfPage">
-        <input type="submit" value="Создать">
-      </form>
-
-
-
-</div>
 
 
 <div class="form" style="display: flex; justify-content: center;">

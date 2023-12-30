@@ -38,6 +38,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'PAGE',
     'map',
     'coments.apps.ComentsConfig',
     'django.contrib.admin',

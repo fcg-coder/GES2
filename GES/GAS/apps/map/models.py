@@ -5,9 +5,9 @@ class MAP(models.Model):
     id = models.Index('id', name='Id страницы')
     idOfPage = id
     page_id = id
-    FlagForInternalRecordings= models.IntegerField('Флаг на наличие внутренних записей', default=0)
+    FlagForInternalRecordings= models.IntegerField('Флаг на наличие подкатегорий')
 
-    FlagForThePresenceOfAParent = models.IntegerField('Флаг на наличие родителя', default=0)
+    FlagForThePresenceOfAParent = models.IntegerField('Флаг на наличие родительской категории')
     internal_pages = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='related_pages')
     STATUS_CHOICES = (
         ('pending', 'На рассмотрении'),
@@ -19,5 +19,5 @@ class MAP(models.Model):
         return self.nameOfPage
 
     class Meta:
-        verbose_name = 'Страница'
-        verbose_name_plural = 'Страницы'
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'

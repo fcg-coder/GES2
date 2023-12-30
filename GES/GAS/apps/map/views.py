@@ -37,24 +37,32 @@ def next_page(request, idToNewPage):
 
     id = int(idToNewPage)
     map_obj = MAP.objects.get(id = idToNewPage)
+
     FlagForInternalRecordingsPAGE = map_obj.FlagForInternalRecordings
+    if (map_obj.internal_pages == None):
+        FlagForInternalRecordingsPAGE = 0
 
     FlagForThePresenceOfAParentPAGE = map_obj.FlagForThePresenceOfAParent
     newPage = MAP(id=id, nameOfPage = nameOfPage, status = 'published', FlagForThePresenceOfAParent = FlagForThePresenceOfAParentPAGE, FlagForInternalRecordings = FlagForInternalRecordingsPAGE)
     newPage.save()
+    
+    print(FlagForInternalRecordingsPAGE)
+    if (FlagForInternalRecordingsPAGE == 1):
+        return render(request, 'page.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
+    else:
+        print('list')
+        return redirect('PAGE:index', idOfPage=idOfPage)
 
 
-    return render(request, 'comments/list.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
 
 def newPage(request, idOfPage):
     if request.method == 'POST':
         map_instance = MAP.objects.get(id=idOfPage)
-        map_instance.FlagForInternalRecordings = 1
         map_instance.save()
         nameOfPage = request.POST.get('nameOfPage')
         pages = MAP.objects.all()
         max_index = max(pages, key=lambda x: x.id) 
-        page = MAP(nameOfPage=nameOfPage, id=max_index.id+1, status = 'pending', FlagForThePresenceOfAParent=1)
+        page = MAP(nameOfPage=nameOfPage, id=max_index.id+1, status = 'pending', FlagForThePresenceOfAParent=1, FlagForInternalRecordings = 0)
         page.save()
         pages = MAP.objects.all()
         map_instance.internal_pages.add(page.id)
@@ -81,10 +89,10 @@ def euler_diagram_view(request):
     # Получите данные из базы данных и обработайте их
     data = MAP.objects.all()
 
-
     # Создайте список меток и соответствующих родительских меток
     labels = [entry.nameOfPage for entry in data]
     parents = ['' if entry.FlagForThePresenceOfAParent == 0 else MAP.objects.get(internal_pages=entry).nameOfPage for entry in data]
+    url = [urls.id for urls in data]
 
     parents[0] = 'ALL'
     parents[1] = 'ALL'
@@ -101,18 +109,21 @@ def euler_diagram_view(request):
         marker=dict(
             colors=['blue', 'red', 'green', 'yellow']  # Укажите цвета для каждой метки
         )
-    )
-    )
+    ))
+
 
     # Настройте внешний вид диаграммы
     fig.update_layout(
         title='Диаграмма Эйлера-Венна',
     )
 
+
+
+
+
     # Сохраните диаграмму в виде HTML-файла или отобразите ее на странице
     # Пример:
     fig.write_html('GAS/templates/euler_diagram.html')
-    
 
     # Верните сгенерированную диаграмму в виде ответа от представления
     return render(request, 'euler_diagram.html')
