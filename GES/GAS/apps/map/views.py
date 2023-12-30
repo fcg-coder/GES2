@@ -89,9 +89,14 @@ def euler_diagram_view(request):
     # Получите данные из базы данных и обработайте их
     data = MAP.objects.all()
 
+
     # Создайте список меток и соответствующих родительских меток
     labels = [entry.nameOfPage for entry in data]
     parents = ['' if entry.FlagForThePresenceOfAParent == 0 else MAP.objects.get(internal_pages=entry).nameOfPage for entry in data]
+
+    parents[0] = 'ALL'
+    parents[1] = 'ALL'
+
     values = [1 for _ in labels]  # Значения могут быть любыми, важен только их относительный размер
 
     # Создайте диаграмму Эйлера-Венна с помощью Plotly Treemap
