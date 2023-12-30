@@ -4,7 +4,7 @@ from django.http import Http404, HttpResponseRedirect
 from requests import post
 from map.models import MAP
 from coments.models import Comment
-
+import plotly.graph_objects as go
 from django.utils import timezone
 
 from django.views.decorators.csrf import csrf_exempt
@@ -50,7 +50,7 @@ def next_page(request, idToNewPage):
     newPage = MAP(id=id, nameOfPage = nameOfPage, status = 'published', FlagForThePresenceOfAParent = FlagForThePresenceOfAParentPAGE, FlagForInternalRecordings = FlagForInternalRecordingsPAGE)
     newPage.save()
 
-    
+
     return render(request, 'comments/list.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
 
 
@@ -85,9 +85,41 @@ def graph(request):
 
     print(G)
     return render(request, 'graph.html', {'G': G })
+import plotly.graph_objects as go
+from .models import MAP
 
+def euler_diagram_view(request):
+    # Получите данные из базы данных и обработайте их
+    data = MAP.objects.all()
 
+    # Создайте список меток и соответствующих родительских меток
+    labels = [entry.nameOfPage for entry in data]
+    parents = ['' if entry.FlagForThePresenceOfAParent == 0 else MAP.objects.get(internal_pages=entry).nameOfPage for entry in data]
+    values = [1 for _ in labels]  # Значения могут быть любыми, важен только их относительный размер
 
+    # Создайте диаграмму Эйлера-Венна с помощью Plotly Treemap
+    fig = go.Figure(go.Treemap(
+        labels=labels,
+        parents=parents,
+        values=values,
+        textinfo='label+value+percent entry',
+        hoverinfo='all',
+        marker=dict(
+            colors=['blue', 'red', 'green', 'yellow']  # Укажите цвета для каждой метки
+        )
+    ))
 
+    # Настройте внешний вид диаграммы
+    fig.update_layout(
+        title='Диаграмма Эйлера-Венна',
+    )
 
+    # Сохраните диаграмму в виде HTML-файла или отобразите ее на странице
+    # Пример:
 
+    print('dsfwefswef')
+    fig.write_html('GAS/templates/euler_diagram.html')
+    
+
+    # Верните сгенерированную диаграмму в виде ответа от представления
+    return render(request, 'euler_diagram.html')
