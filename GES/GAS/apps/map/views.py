@@ -14,17 +14,12 @@ import networkx as nx
 from django.apps import apps
 import pickle
 
-
-
-
-
 def index(request):
     id = int(0)
     pages = MAP.objects.all()
     #for page in pages:
      #   print(page.id)
     return render(request, 'base.html',{'pages': pages } )
-
 
 @csrf_exempt
 def next_page(request, idToNewPage):
@@ -51,8 +46,6 @@ def next_page(request, idToNewPage):
 
     return render(request, 'comments/list.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
 
-
-#ДОБАВИТЬ КАВЕР 
 def newPage(request, idOfPage):
     if request.method == 'POST':
         map_instance = MAP.objects.get(id=idOfPage)
@@ -83,7 +76,6 @@ def graph(request):
 
     print(G)
     return render(request, 'graph.html', {'G': G })
-
 
 def euler_diagram_view(request):
     # Получите данные из базы данных и обработайте их
