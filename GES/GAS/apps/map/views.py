@@ -10,10 +10,8 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 
-
 import networkx as nx
 from django.apps import apps
-import matplotlib.pyplot as plt
 import pickle
 
 
@@ -85,8 +83,7 @@ def graph(request):
 
     print(G)
     return render(request, 'graph.html', {'G': G })
-import plotly.graph_objects as go
-from .models import MAP
+
 
 def euler_diagram_view(request):
     # Получите данные из базы данных и обработайте их
@@ -107,7 +104,8 @@ def euler_diagram_view(request):
         marker=dict(
             colors=['blue', 'red', 'green', 'yellow']  # Укажите цвета для каждой метки
         )
-    ))
+    )
+    )
 
     # Настройте внешний вид диаграммы
     fig.update_layout(
@@ -116,8 +114,6 @@ def euler_diagram_view(request):
 
     # Сохраните диаграмму в виде HTML-файла или отобразите ее на странице
     # Пример:
-
-    print('dsfwefswef')
     fig.write_html('GAS/templates/euler_diagram.html')
     
 
