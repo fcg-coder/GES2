@@ -60,22 +60,7 @@ justify-content: center;align-items: center;">
 </div>
 
 
-<div class="form" style="display: flex; justify-content: center;">
-    <form style="display: flex; flex-direction: column;" method="post" action="{% url 'map:newPage'  idOfPage %}">
-        {% csrf_token %}
-        <label for="nameOfPage">Имя страницы:</label>
-        <input type="text" id="nameOfPage" name="nameOfPage">
-        <input type="submit" value="Создать">
-      </form>
 
 
-
-
-
-
-
-
-
-</div>
 </body>
 </html>

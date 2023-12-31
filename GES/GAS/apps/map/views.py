@@ -49,6 +49,7 @@ def next_page(request, idToNewPage):
     if (FlagForInternalRecordingsPAGE == 1):
         return render(request, 'MAP.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
     else:
+        print(idOfPage)
         return redirect('PAGE:index', idOfPage=idOfPage)
 
 

@@ -52,6 +52,17 @@
     </div>
 
 
+    <form method="POST" action="{% url 'PAGE:newPage' idOfPage=1 %}">
+        {% csrf_token %}
+        <label for="idOfPage">Id категории:</label>
+        <input type="number" id="idOfPage" name="idOfPage" required>
+        <br>
+        <label for="nameOfPage">Имя страницы:</label>
+        <input type="text" id="nameOfPage" name="nameOfPage" required>
+        <br>
+        <input type="submit" value="Создать страницу">
+      </form>
+      
 
 
 

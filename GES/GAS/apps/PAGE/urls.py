@@ -10,7 +10,7 @@ app_name = 'PAGE'
 
 urlpatterns = [
    path('pagelist<int:idOfPage>/', views.index, name='index'),
-   path('page<int:idOfPage>/', views.openPage, name='index'),
-   path('<int:idOfPage>', views.newPage, name='newPage'),
+   path('page<int:idOfPage>/', views.openPage, name='openPage'),
+   path('newPAge<int:idOfPage>/', views.newPage, name='newPage'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -4,7 +4,6 @@ from map.models import MAP
 class page(models.Model):
     id = models.Index('id', name='Id страницы')
     nameOfPage = models.CharField('Имя страницы', max_length= 50)
-    idCategory = models.IntegerField('id', name='Id категории')
     STATUS_CHOICES = (
         ('pending', 'На рассмотрении'),
         ('published', 'Опубликовано'),
