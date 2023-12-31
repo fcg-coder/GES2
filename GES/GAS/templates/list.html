@@ -73,7 +73,6 @@ justify-content: center;
     flex-direction: column;">
 
   {% for a in obj  reversed %}
-    {% if a.idOfPage == idOfPage %}
         <div style="padding: 14px; margin: 13px; background-color: #e8e8e8; border-radius: 20px;">
             
             
@@ -97,7 +96,6 @@ justify-content: center;
             <!-- <p>Дата создания:<br> {{ a.pub_date }}</p> -->
             
         </div>
-    {% endif %}
 {% endfor %}
 
 </div>

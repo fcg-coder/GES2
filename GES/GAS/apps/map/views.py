@@ -43,33 +43,15 @@ def next_page(request, idToNewPage):
         FlagForInternalRecordingsPAGE = 0
 
     FlagForThePresenceOfAParentPAGE = map_obj.FlagForThePresenceOfAParent
-    newPage = MAP(id=id, nameOfPage = nameOfPage, status = 'published', FlagForThePresenceOfAParent = FlagForThePresenceOfAParentPAGE, FlagForInternalRecordings = FlagForInternalRecordingsPAGE)
+    newPage = MAP(id=id, nameOfPage = nameOfPage, FlagForThePresenceOfAParent = FlagForThePresenceOfAParentPAGE, FlagForInternalRecordings = FlagForInternalRecordingsPAGE)
     newPage.save()
     
-    print(FlagForInternalRecordingsPAGE)
     if (FlagForInternalRecordingsPAGE == 1):
-        return render(request, 'page.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
+        return render(request, 'MAP.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
     else:
-        print('list')
         return redirect('PAGE:index', idOfPage=idOfPage)
 
 
-
-def newPage(request, idOfPage):
-    if request.method == 'POST':
-        map_instance = MAP.objects.get(id=idOfPage)
-        map_instance.save()
-        nameOfPage = request.POST.get('nameOfPage')
-        pages = MAP.objects.all()
-        max_index = max(pages, key=lambda x: x.id) 
-        page = MAP(nameOfPage=nameOfPage, id=max_index.id+1, status = 'pending', FlagForThePresenceOfAParent=1, FlagForInternalRecordings = 0)
-        page.save()
-        pages = MAP.objects.all()
-        map_instance.internal_pages.add(page.id)
-        return redirect('map:index')
-    else:
-        pages = MAP.objects.all()
-        return redirect('map:index')
     
 def graph(request):
     G = nx.Graph()

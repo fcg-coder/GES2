@@ -11,7 +11,6 @@ app_name = 'map'
 urlpatterns = [
     path('', views.index , name='index'),
     path('<int:idToNewPage>/', views.next_page, name='next_page'),
-    path('newPage/<int:idOfPage>/', views.newPage, name='newPage'),
     path('graph/', views.graph, name='graph'),
     path('diagram/', views.euler_diagram_view, name='euler_diagram_view'),
 

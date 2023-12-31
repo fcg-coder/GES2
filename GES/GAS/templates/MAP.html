@@ -9,6 +9,7 @@
         body{
             display: flex;
             justify-content: center;
+            background-color: antiquewhite;
         }
         .intro{
             display: flex;
@@ -46,7 +47,7 @@ justify-content: center;align-items: center;">
 
 <div class="intro">
     {% for page in map_internal_pages %}
-        {% if page.status == 'published' %}
+        
             <a href="{% url 'map:next_page' idToNewPage=page.id  %}">
                 <div class="rectangle red">
                     
@@ -54,7 +55,7 @@ justify-content: center;align-items: center;">
              
             </a>
             {{page.nameOfPage}}
-        {% endif %}
+
     {% endfor %}
 </div>
 

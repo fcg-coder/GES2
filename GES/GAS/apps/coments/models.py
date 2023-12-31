@@ -1,6 +1,6 @@
 from django.db import models
 import os
-from map.models import MAP
+from PAGE.models import page
 
 #Здесь будут описываться классы(один) коментариев 
 class Comment(models.Model):
@@ -8,10 +8,9 @@ class Comment(models.Model):
     pub_date = models.DateTimeField('Дата публикации')
     document = models.FileField(upload_to='documents/')
     documentName = models.CharField('Имя файла', max_length= 50)
-    idOfPage = models.IntegerField('Id страницы')
-    cat = models.ForeignKey(MAP, on_delete=models.CASCADE)
+    cat = models.ForeignKey(page, verbose_name='Страница на которой оставили комментарий', on_delete=models.CASCADE)
     username = models.CharField('Имя пользователя', max_length= 25)
-    adminNameComment = models.TextField('Имя объекта')
+    adminNameComment = models.TextField('Имя комментария')
     
     def is_image_file(self):
         # Получаем расширение файла

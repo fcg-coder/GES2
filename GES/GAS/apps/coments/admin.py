@@ -10,7 +10,7 @@ class CommentAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Основная информация', {
-            'fields': ('adminNameComment', 'comment_text', 'pub_date', 'document', 'documentName', 'idOfPage', 'username'),
+            'fields': ('adminNameComment', 'comment_text', 'pub_date', 'document', 'documentName', 'cat', 'username'),
         }),
     )
 
