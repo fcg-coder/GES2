@@ -30,11 +30,12 @@ def openPage(request, idOfPage):
 
 def newPage(request,idOfPage):
     if request.method == 'POST':
-
         idOfPage = request.POST.get('idOfPage')
         category = MAP.objects.get(id = idOfPage)
         nameOfPage = request.POST.get('nameOfPage')
-        id_array = page.objects.values_list('id', flat=True)
+        id_arrayM = MAP.objects.values_list('id', flat=True)
+        id_arrayP = page.objects.values_list('id', flat=True)
+        id_array = list(id_arrayM) + list(id_arrayP)
         id_list = list(id_array)
         newId = max(id_list) + 1 if id_list else 1
         PAGE = page(nameOfPage = nameOfPage, map = category, status = 'pending', id = newId)

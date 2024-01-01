@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.http import Http404, HttpResponseRedirect
 from requests import post
 from map.models import MAP
+from PAGE.models import page
 from coments.models import Comment
 import plotly.graph_objects as go
 from django.utils import timezone
@@ -56,16 +57,23 @@ def next_page(request, idToNewPage):
     
 def graph(request):
     G = nx.Graph()
-    instances = MAP.objects.all()
-
+    categorys = MAP.objects.all()
     # Добавление узлов и связей в граф
-    for instance in instances:
-        G.add_node(instance.id, name=instance.nameOfPage)  # Добавляем узел с атрибутом name
-        for related_instance in instance.internal_pages.all():
-            G.add_node(related_instance.id, name=related_instance.nameOfPage)  # Добавляем связанный узел
-            G.add_edge(instance.id, related_instance.id)
+    for category in categorys:
+        G.add_node(category.id, name=category.nameOfPage)  # Добавляем узел с атрибутом name
+        
+        if category.FlagForInternalRecordings == 1:
+            for podcategory in category.internal_pages.all():
 
-    print(G)
+                G.add_node(podcategory.id, name=podcategory.nameOfPage)  # Добавляем связанный узел
+                G.add_edge(category.id, podcategory.id)
+            
+        if category.FlagForInternalRecordings == 0:
+            objs = page.objects.filter(map = category)
+            for obj in objs:
+                G.add_node(obj.id, name=obj.nameOfPage)  # Добавляем связанный узел
+                G.add_edge(category.id, obj.id)
+            
     return render(request, 'graph.html', {'G': G })
 
 def euler_diagram_view(request):

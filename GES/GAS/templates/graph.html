@@ -62,21 +62,32 @@
 
 
         network.on("click", function(params) {
-    if (params.nodes.length > 0) {
-        var nodeId = params.nodes[0];
-        var nodeName = nodes.get(nodeId).label;
-        var goToPage = confirm("Перейти на страницу " + nodeName + "?");
-        if (goToPage) {
-            // Создание ссылки на страницу с использованием полного URL-адреса
-            var link = document.createElement('a');
-            link.appendChild(document.createTextNode("Перейти на страницу " + nodeName + "?"));
-            link.title = nodeName;
-            link.href =  "/" + nodeId + "/"; // Замените "/your_page_url/" на фактический URL вашей страницы
-            link.target = "_self"; // Открывать ссылку в текущем окне или вкладке
-            link.click(); // Выполнить переход по ссылке
-        }
-    }
-});
+                var nodeId = params.nodes[0];
+                var nodeName = nodes.get(nodeId).label;
+                var goToPage = confirm("Перейти на страницу " + nodeName + "?");
+                if (goToPage) {
+                    var connectedNodes = network.getConnectedNodes(nodeId);
+
+                    // Получение количества дочерних элементов
+                    var numberOfChildren = connectedNodes.length;
+
+                    // Вывод количества дочерних элементов в консоль
+                    console.log("Количество дочерних элементов для узла " + nodeId + ": " + numberOfChildren);
+                  
+                    // Создание ссылки на страницу с использованием полного URL-адреса
+                    var link = document.createElement('a');
+                    link.appendChild(document.createTextNode("Перейти на страницу " + nodeName + "?"));
+                    link.title = nodeName;
+                    link.href =  "/" + nodeId + "/"; // Замените "/your_page_url/" на фактический URL вашей страницы
+              
+                    if (numberOfChildren == 1){
+                        link.href =  "/page" + nodeId + "/"; // Замените "/your_page_url/" на фактический URL вашей страницы
+                    }
+                    link.target = "_self"; // Открывать ссылку в текущем окне или вкладке
+                    link.click(); // Выполнить переход по ссылке
+                }
+            
+        });
 
     </script>
     
