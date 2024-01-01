@@ -75,18 +75,29 @@ def graph(request):
                 G.add_edge(category.id, obj.id)
             
     return render(request, 'graph.html', {'G': G })
+ 
 
 def euler_diagram_view(request):
-    # Получите данные из базы данных и обработайте их
-    data = MAP.objects.all()
+    # Получите данные из моделей MAP и Page и обработайте их
+    map_data = MAP.objects.all()
+    page_data = page.objects.all()
 
-    # Создайте список меток и соответствующих родительских меток
-    labels = [entry.nameOfPage for entry in data]
-    parents = ['' if entry.FlagForThePresenceOfAParent == 0 else MAP.objects.get(internal_pages=entry).nameOfPage for entry in data]
-    url = [urls.id for urls in data]
+    # Создайте список меток и соответствующих родительских меток для модели MAP
+    map_labels = [entry.nameOfPage for entry in map_data]
+    map_parents = ['' if entry.FlagForThePresenceOfAParent == 0 else MAP.objects.get(internal_pages=entry).nameOfPage for entry in map_data]
+
+    # Создайте список меток и соответствующих родительских меток для модели Page
+    page_labels = [entry.nameOfPage for entry in page_data]
+    page_parents = [entry.map.nameOfPage for entry in page_data]
+
+    # Объедините списки меток и родительских меток
+    labels = map_labels + page_labels
+    parents = map_parents + page_parents
 
     parents[0] = 'ALL'
     parents[1] = 'ALL'
+
+
 
     values = [1 for _ in labels]  # Значения могут быть любыми, важен только их относительный размер
 
@@ -102,18 +113,12 @@ def euler_diagram_view(request):
         )
     ))
 
-
     # Настройте внешний вид диаграммы
     fig.update_layout(
         title='Диаграмма Эйлера-Венна',
     )
 
-
-
-
-
     # Сохраните диаграмму в виде HTML-файла или отобразите ее на странице
-    # Пример:
     fig.write_html('GAS/templates/euler_diagram.html')
 
     # Верните сгенерированную диаграмму в виде ответа от представления
