@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('map.urls')),
     path('', include('coments.urls')),
     path('', include('PAGE.urls')),
+    path('', include('service.urls')),
     path('admin/', admin.site.urls),
     path('', include('django.contrib.flatpages.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

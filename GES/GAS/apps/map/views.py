@@ -18,6 +18,7 @@ import pickle
 def index(request):
     id = int(0)
     pages = MAP.objects.all()
+    
     #for page in pages:
      #   print(page.id)
     return render(request, 'base.html',{'pages': pages } )
@@ -53,8 +54,13 @@ def next_page(request, idToNewPage):
         print(idOfPage)
         return redirect('PAGE:index', idOfPage=idOfPage)
 
+def createNewPage(request):
+    category = MAP.objects.filter(FlagForInternalRecordings = 0)
+    print(category)
+    return render(request, 'createNewPage.html',{'category' : category} )
 
-    
+
+
 def graph(request):
     G = nx.Graph()
     categorys = MAP.objects.all()
