@@ -1,3 +1,6 @@
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+from django.core.files.storage import default_storage
 from django.db import models
 import os
 from PAGE.models import page
@@ -28,8 +31,14 @@ class Comment(models.Model):
     def __str__(self):
         return self.adminNameComment
     
-    
-    
+   
     class Meta:
         verbose_name = 'Коментарий'
         verbose_name_plural = 'Коментарии'
+
+
+    
+@receiver(pre_delete, sender=Comment)
+def delete_comment_document(sender, instance, **kwargs):
+    # Удаление документа при удалении комментария
+    default_storage.delete(instance.document.path)
