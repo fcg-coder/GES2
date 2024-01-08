@@ -52,14 +52,14 @@
     </style>
 </head>
 <body>
-    {% for categor in category %}
-    <p>{{ categor }}</p>
-{% endfor %}
+    
     <form method="POST" action="{% url 'PAGE:newPage' idOfPage=1 %}">
         {% csrf_token %}
-        <label for="idOfPage">Id категории:</label>
+        <label for="idOfPage">КАТЕГОРИЯ</label>
         <select id="idOfPage" name="idOfPage" required>
-           
+            {% for categor in category %}
+            <option value="{{ categor }}">{{ categor }}</option>
+            {% endfor %}
         </select>
         <br>
         <label for="nameOfPage">Имя страницы:</label>
@@ -67,6 +67,7 @@
         <br>
         <input type="submit" value="Создать страницу">
     </form>
+    
     
 </body>
 </html>
