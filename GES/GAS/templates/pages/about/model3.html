@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="shortcut icon" href="icon.png" type="image/x-icon">
+	<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body{
+            margin: 0px;
+        }
+    </style>
+</head>
+<body>
+
+
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.139.0/build/three.module.js",
+            "OrbitControls": "https://unpkg.com/three@0.139.0/examples/jsm/controls/OrbitControls.js",
+            "GLTFLoader": "https://unpkg.com/three@0.139.0/examples/jsm/loaders/GLTFLoader.js",
+            "RectAreaLightHelper": "https://unpkg.com/three@0.139.0/examples/jsm/helpers/RectAreaLightHelper.js",
+            "RectAreaLightUniformsLib": "https://unpkg.com/three@0.139.0/examples/jsm/lights/RectAreaLightUniformsLib.js"
+        }
+    }
+</script>
+
+
+    
+
+
+        <div class="model" style="height: 100%; width: 100%;"> </div>
+        
+        <script type="module" > import * as THREE from 'three';
+            import { OrbitControls } from 'OrbitControls';
+            import { GLTFLoader } from 'GLTFLoader';
+            import { RectAreaLightHelper } from 'RectAreaLightHelper'
+            import { RectAreaLightUniformsLib } from 'RectAreaLightUniformsLib';
+            
+            function init() {
+                let container = document.querySelector('.model');
+            
+                //Scene
+                const scene = new THREE.Scene()
+                scene.background = new THREE.Color("black");
+            
+                //Camera
+                const camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight , 0.1, 100);
+                camera.position.set(3, 1, 3)
+            
+                //render
+                const renderer = new THREE.WebGLRenderer({antialias: true})
+                renderer.setSize( window.innerWidth, window.innerHeight,false)
+                container.appendChild(renderer.domElement)
+            
+            
+            
+                // Получение доступа к канвасу и изменение его свойств
+            
+        
+                // Изменение стиля канваса
+                // Изменение других свойств канваса
+                // Другие операции с канвасом...
+                let plain;
+                {
+                    plain = new THREE.Mesh(
+                        new THREE.PlaneGeometry(0, 0),
+                        new THREE.MeshBasicMaterial({color: "#E2DFE1"})
+                    )
+                    plain.reciveShadow = true;
+                    plain.position.set(0, -1, 0)
+                    plain.rotateX(-Math.PI / 2);
+                    scene.add(plain)
+                }
+            
+                // Model
+                {
+                    const loader = new GLTFLoader();
+                    loader.load('/static/pages/about/fcg.glb', glb => {
+                    scene.add(glb.scene);
+                    }, 
+                        function (error) {
+                            console.log('Error: ' + error)
+                        }
+                    )
+                }
+                
+                {
+                    const light = new THREE.DirectionalLight(0xffffff, 1)
+                    light.position.set(0, 1, 10)
+                    light.lookAt(0, -1, 0)
+                    scene.add(light)
+            
+                    // Helper
+                    // const helper = new THREE.DirectionalLightHelper(light, 5)
+                    // scene.add(helper)
+                }
+            
+                {
+                    const light = new THREE.DirectionalLight(0xffffff, 1)
+                    light.position.set(2, 0, 5)
+                    light.lookAt(0, 1, 0)
+                    scene.add(light)
+            
+                    // Helper
+                    // const helper = new THREE.DirectionalLightHelper(light, 5)
+                    // scene.add(helper)
+                }
+            
+                RectAreaLightUniformsLib.init();
+                {
+                    const rectLight = new THREE.RectAreaLight(0xffffff, 1, 100, 100);
+                    rectLight.position.set(-10,0,0)
+                    rectLight.rotation.y = Math.PI + Math.PI/4;
+                    scene.add(rectLight)
+                }
+            
+                {
+                    const rectLight = new THREE.RectAreaLight(0xffffff, 1, 100, 100);
+                    rectLight.position.set(10,0,0)
+                    rectLight.rotation.y = Math.PI - Math.PI/4;
+                    scene.add(rectLight)
+                }
+                
+                //OrbitControls
+                const controls = new OrbitControls(camera, renderer.domElement);
+                controls.autoRotate = true;
+                controls.autoRotateSpeed = 5;
+                controls.enableDamping = true;
+            
+                //Resize
+                window.addEventListener('resize', onWindowResize, false)
+                
+                function onWindowResize() {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+            
+                    renderer.setSize( window.innerWidth, window.innerHeight,false)
+                }
+            
+                function onWindowResizeMOB() {
+                    camera.aspect = window.innerWidth/ window.innerHeight;
+                    camera.updateProjectionMatrix();
+            
+                    renderer.setSize( window.innerWidth, window.innerHeight/2)
+            
+                }
+            
+                // Animate
+                function animate() {
+                    requestAnimationFrame(animate)
+                    controls.update();
+                    renderer.render(scene, camera)
+                }
+            
+            
+            
+                
+                animate()
+               
+            
+            
+                if (screen.width <= 500) {
+            
+                    onWindowResizeMOB()
+                
+                  }else{
+                    onWindowResize()
+                  }
+            
+            }
+            
+            init()</script>
+
+
+
+
+
+  
+
+
+
+</body>
+</html>
