@@ -58,7 +58,7 @@
         <label for="idOfPage">КАТЕГОРИЯ</label>
         <select id="idOfPage" name="idOfPage" required>
             {% for categor in category %}
-            <option value="{{ categor }}">{{ categor }}</option>
+            <option value="{{ categor.id }}">{{ categor.nameOfPage }}</option>
             {% endfor %}
         </select>
         <br>
@@ -67,6 +67,7 @@
         <br>
         <input type="submit" value="Создать страницу">
     </form>
+    
     
     
 </body>

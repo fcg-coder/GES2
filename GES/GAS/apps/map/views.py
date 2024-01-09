@@ -55,7 +55,7 @@ def next_page(request, idToNewPage):
         return redirect('PAGE:index', idOfPage=idOfPage)
 
 def createNewPage(request):
-    category = MAP.objects.filter(FlagForInternalRecordings = 0)
+    category =  MAP.objects.filter(FlagForInternalRecordings=0).values('id', 'nameOfPage')
     print(category)
     return render(request, 'createNewPage.html',{'category' : category} )
 
