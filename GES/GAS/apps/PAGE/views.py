@@ -33,7 +33,7 @@ def openPage(request, idOfPage):
 def newPage(request, idOfPage):
     if request.method == 'POST':
         category = request.POST.get('idOfPage')
-        MAPs = MAP.objects.get(id=int(category))
+        map = MAP.objects.get(id=int(category))
 
         nameOfPage = request.POST.get('nameOfPage')
         
@@ -42,7 +42,7 @@ def newPage(request, idOfPage):
         id_array = list(id_arrayM) + list(id_arrayP)
         id_list = list(id_array)
         newId = max(id_list) + 1 if id_list else 1
-        PAGE = page(nameOfPage=nameOfPage, map=MAPs, status='pending', id=newId)
+        PAGE = page(nameOfPage=nameOfPage, map=map, status='pending', id=newId)
         PAGE.save()
         return redirect('map:index')
     else:

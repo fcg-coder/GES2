@@ -33,13 +33,14 @@
             background-color: yellow;
         }
 
+        
         .footer {
 
-            position: fixed;
+            position:fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 90px;
+            height: auto;
             background-color: #dcdcdc;
             display: flex;
             align-items: center;
@@ -48,12 +49,22 @@
             }
 
         .footer ul{
-
+            font-size: 12px;
             font-family: 'Josefin Sans', sans-serif;
             list-style-type: none;
+            display: flex;
+        justify-content: space-evenly;
+        flex-direction: column;
+        height: 100%;
+        padding: 0;
         }
 
+
+        .footer ul li{
+            padding: 3px;
+        }
         .footer ul a{
+          
             color: rgb(86, 86, 86);
             text-decoration: none;
         }
@@ -91,11 +102,11 @@
 <div class="footer">
 
 
-        <ul>
+        <ul>INFORMATION
             <li> 
-                 <a href="{% url 'django.contrib.flatpages.views.flatpage' 'about/' %}">About us</a>
-      
-            </li>
+                <a href="{% url 'django.contrib.flatpages.views.flatpage' 'about/' %}">About us</a>
+     
+           </li>
             <li> 
                <a href=" {% url 'map:createNewPage' %} ">Create new page</a>
 
@@ -104,10 +115,37 @@
                 <a href="{% url 'django.contrib.flatpages.views.flatpage' 'feedback/' %}">Feedback</a>
                
                </li>
-    </ul>
-        <a href=" {% url 'map:graph' %} "> <img style = "width: 50px; height: auto;" src="https://cdn.icon-icons.com/icons2/2385/PNG/512/graph_icon_144306.png"> </a>
-        <a href=" {% url 'map:euler_diagram_view' %} "> <img style = "width: 50px; height: auto;" src="https://cdn-icons-png.flaticon.com/128/7936/7936724.png"> </a>
+               
+               <li> 
+                <a href="{% url 'django.contrib.flatpages.views.flatpage' 'donation/' %}">Donation</a>
+               
+               </li>
+        </ul>
 
+
+        <ul>ALTERNATIVE VIEW
+           <li> <a href=" {% url 'map:graph' %} "> 
+            Graph
+            
+            <!-- <img style = "width: 50px; height: auto;" src="https://cdn.icon-icons.com/icons2/2385/PNG/512/graph_icon_144306.png"> 
+         -->
+        
+        </a>
+           </li>
+           
+           
+           <li>
+            
+            <a href=" {% url 'map:euler_diagram_view' %} "> 
+                Diagram
+                <!-- <img style = "width: 50px; height: auto;" src="https://cdn-icons-png.flaticon.com/128/7936/7936724.png"> 
+             -->
+            </a>
+           
+        
+        </li>    
+        </ul>
+        
 </div>
 </body>
 </html>
