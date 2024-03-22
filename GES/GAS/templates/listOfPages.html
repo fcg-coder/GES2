@@ -2,69 +2,159 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ nameOfPage }}</title>
     <style>
-        body{
-            display: flex;
-            justify-content: center;
-        }
-        .intro{
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #d8d8d8;
+            border: 19px;
+            border-color: grey;
+            overflow-x: hidden;
+            transition: 0.5s;
+            z-index: 1000;
             display: flex;
             flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
         }
-        .rectangle {
-            width: 200px;
-            height: 100px;
-            margin: 0 auto;
-            margin-top: 50px;
-            margin: 10px;
+
+        /* Стили для элементов бокового меню */
+        .sidebar-content {
+            padding: 16px;
+            
         }
-        .red {
-            background-color: red;
+
+        /* Стили для кнопки открытия бокового меню */
+        #openSidebarBtn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
         }
-        .blue {
-            background-color: blue;
-        }
-        .green {
-            background-color: green;
-        }
-        .yellow {
-            background-color: yellow;
+
+        /* Стили для элементов фильтра */
+        .filter-checkbox {
+            margin-bottom: 8px;
         }
     </style>
 </head>
 
 <body>
+     <!-- Кнопка для открытия бокового меню -->
+     <button id="openSidebarBtn" onclick="openSidebar()">Filter</button>
+
     
-<div style="display: flex;
 
-flex-wrap: nowrap;
-flex-direction: column;
-justify-content: center;align-items: center;">
+     <!-- Боковое меню с фильтрами -->
+     <div id="sidebar" class="sidebar">
+        <button onclick="closeSidebar()">Close</button> <!-- Кнопка закрытия меню -->
+            
+    <form id="filterForm">
+        <div class = "sidebar-content">
+            <label for="textTags">Text Tags:</label>
+            <br>
+            <input type="checkbox" class="textTag" id="textAll"> All<br>
+            {% for tag in all_text_tags %}
+                <input type="checkbox" class="textTag" name="textTags" value="{{ tag.0 }}"> {{ tag.1 }}<br>
+            {% endfor %}
+        </div>
 
-<div class="intro">
-    {% for page in map_internal_pages %}
-        {% if page.status == "published" %}
-            <a href="{% url 'PAGE:openPage' idOfPage=page.id  %}">
-                <div class="rectangle red">
-                    
+
+        <div class = "sidebar-content">
+            <label for="graphicalTags">Graphical Tags:</label>
+            <br>
+            <input type="checkbox" class="graphicalTag" id="graphicalAll"> All<br>
+            {% for tag in all_graphical_tags %}
+                <input type="checkbox" class="graphicalTag" name="graphicalTags" value="{{ tag.0 }}"> {{ tag.1 }}<br>
+            {% endfor %}
+        </div>
+        <button type="button" onclick="filterPages()">Filter</button>
+    </form>
+</div>
+    <!-- Список страниц -->
+    <div class="intro">
+        {% for page in map_internal_pages %}
+            {% if page.status == "published" %}
+                <div class="rectangle"
+                     data-text-tags="{{ page.text_based_MMOs_T }}"
+                     data-graphical-tags="{{ page.graphical_MMOs_TAG }}">
+                    <a href="{% url 'PAGE:openPage' idOfPage=page.id %}">
+                        {{ page.nameOfPage }}
+                    </a>
                 </div>
-             
-            </a>
-            {{page.nameOfPage}}
             {% endif %}
-    {% endfor %}
-</div>
+        {% endfor %}
+    </div>
 
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+            document.getElementById("openSidebarBtn").style.display = "none"; // Скрыть кнопку открытия
+        }
 
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+            document.getElementById("openSidebarBtn").style.display = "block"; // Показать кнопку открытия
+        }
+        // Функция фильтрации страниц
+        function filterPages() {
+            // Получаем выбранные теги Text
+            var textTags = document.querySelectorAll(".textTag:checked");
+            // Получаем выбранные теги Graphical
+            var graphicalTags = document.querySelectorAll(".graphicalTag:checked");
 
+            // Проходим по всем страницам и скрываем те, которые не соответствуют выбранным тегам
+            document.querySelectorAll(".intro .rectangle").forEach(function(page) {
+                // Получаем теги страницы из атрибутов данных
+                var pageTextTags = page.dataset.textTags.split(" ");
+                var pageGraphicalTags = page.dataset.graphicalTags.split(" ");
 
+                // Проверяем, соответствуют ли теги страницы выбранным тегам
+                if ((textTags.length === 0 || hasSelectedTag(pageTextTags, textTags)) &&
+                    (graphicalTags.length === 0 || hasSelectedTag(pageGraphicalTags, graphicalTags))) {
+                    page.style.display = "block"; // Отображаем страницу
+                } else {
+                    page.style.display = "none"; // Скрываем страницу
+                }
+            });
+        }
 
+        // Функция для проверки наличия выбранных тегов на странице
+        function hasSelectedTag(pageTags, selectedTags) {
+            // Проходим по всем выбранным тегам
+            for (var i = 0; i < selectedTags.length; i++) {
+                // Если страница содержит выбранный тег, возвращаем true
+                if (pageTags.includes(selectedTags[i].value) || selectedTags[i].id === "textAll" || selectedTags[i].id === "graphicalAll") {
+                    return true;
+                }
+            }
+            return false; // Если не найдено соответствие, возвращаем false
+        }
 
+        // Обработчик события для чекбокса "All" в группе тегов Text
+        document.getElementById("textAll").addEventListener("change", function() {
+            // Получаем все чекбоксы в группе тегов Text
+            var textCheckboxes = document.querySelectorAll(".textTag");
+            // Устанавливаем состояние чекбоксов в зависимости от состояния "All"
+            textCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = document.getElementById("textAll").checked;
+            });
+        });
 
-
-</div>
+        // Обработчик события для чекбокса "All" в группе тегов Graphical
+        document.getElementById("graphicalAll").addEventListener("change", function() {
+            // Получаем все чекбоксы в группе тегов Graphical
+            var graphicalCheckboxes = document.querySelectorAll(".graphicalTag");
+            // Устанавливаем состояние чекбоксов в зависимости от состояния "All"
+            graphicalCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = document.getElementById("graphicalAll").checked;
+            });
+        });
+    </script>
 </body>
 </html>

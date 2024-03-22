@@ -15,9 +15,25 @@ def index(request, idOfPage):
     pages = page.objects.filter(map = category)
     nameOfPage = category.nameOfPage
 
-    print(pages)
+
+    all_pages = page.objects.all()
+
+    
+    
+    all_text_tags = set()
+    all_graphical_tags = set()
+
+    for page_obj in all_pages:
+        all_text_tags.update(page_obj.TEXT_BASED_MMO_CHOICES)
+        all_graphical_tags.update(page_obj.GRAPHICAL_MMO_CHOICES)
+
+    print(all_text_tags)
+    print(all_graphical_tags)
+    
+    
     idOfPage = int(idOfPage)
-    return render(request, 'listOfPages.html', {'map_internal_pages': pages, 'nameOfPage' : nameOfPage} )
+    return render(request, 'listOfPages.html', {'map_internal_pages': pages, 'nameOfPage' : nameOfPage,  'all_text_tags': all_text_tags,
+        'all_graphical_tags': all_graphical_tags,} )
 
 
 

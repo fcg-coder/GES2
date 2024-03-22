@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
+   
     <title>Отображение графа</title>
     <!-- Подключение библиотеки vis.js -->
     <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <style>
         body{
-            background-color: rgba(0, 0, 0, 0.756);
+            background-color: white;
+            font-size: 12px;
+            font-family: 'Josefin Sans', sans-serif;
         }
         /* Стили для контейнера, в котором будет отображаться граф */
         #graph-container {
@@ -17,7 +21,7 @@
     </style>
 </head>
 <body>
-    <h1>Граф всего сайта</h1>
+    <h1>Hierarchical Structure of Categories, Subcategories, and Worlds on the Website</h1>
     <div id="graph-container"></div>
 
     <script>
@@ -50,7 +54,7 @@
             nodes: {
                 shape: 'box',
                 color: {
-                    background: 'gray',
+                    background: 'white',
                     border: 'black'
                 }
             }
@@ -64,6 +68,11 @@
         network.on("click", function(params) {
                 var nodeId = params.nodes[0];
                 var nodeName = nodes.get(nodeId).label;
+                console.log(nodeName , ' ' ,nodeId )
+                if (nodeName == undefined){
+                    return;
+                    }
+                else{
                 var goToPage = confirm("Перейти на страницу " + nodeName + "?");
                 if (goToPage) {
                     var connectedNodes = network.getConnectedNodes(nodeId);
@@ -76,17 +85,20 @@
                   
                     // Создание ссылки на страницу с использованием полного URL-адреса
                     var link = document.createElement('a');
+                
                     link.appendChild(document.createTextNode("Перейти на страницу " + nodeName + "?"));
                     link.title = nodeName;
                     link.href =  "/" + nodeId + "/"; // Замените "/your_page_url/" на фактический URL вашей страницы
-              
+            
                     if (numberOfChildren == 1){
                         link.href =  "/page" + nodeId + "/"; // Замените "/your_page_url/" на фактический URL вашей страницы
                     }
                     link.target = "_self"; // Открывать ссылку в текущем окне или вкладке
                     link.click(); // Выполнить переход по ссылке
+                
                 }
-            
+            }
+                
         });
 
     </script>
