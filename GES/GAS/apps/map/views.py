@@ -15,19 +15,57 @@ import networkx as nx
 from django.apps import apps
 import pickle
 
+from .models import countOfVirW 
+
 def index(request):
     id = int(0)
     pages = MAP.objects.all()
-    
-    #for page in pages:
-     #   print(page.id)
-    return render(request, 'base.html',{'pages': pages } )
 
+    find_parents_and_children()
+    VWS = page.objects.all()
+    countOfVirW(VWS)
+ 
+    return render(request, 'base.html', {'pages': pages})
+
+
+def find_parents_and_children():
+    all_maps = MAP.objects.all()
+
+    # Проходимся по каждому объекту
+    for map_obj in all_maps:
+        # Получаем дочерние страницы текущего объекта
+        child_pages = map_obj.internal_pages.all()
+        
+        # Если у текущего объекта есть дочерние страницы
+        if child_pages.exists():
+            # Проходимся по каждой дочерней странице
+            for child_page in child_pages:
+                # Устанавливаем для дочерней страницы родительскую страницу текущего объекта
+                child_page.parent_page = map_obj
+                child_page.save()
+
+    # Проходимся по каждому объекту снова
+    for map_obj in all_maps:
+        # Получаем родительскую страницу текущего объекта
+        parent_page = map_obj.parent_page
+
+        # Если у текущего объекта есть родительская страница
+        if parent_page:
+            # Получаем все дочерние страницы для родительской страницы
+            child_pages = parent_page.internal_pages.all()
+
+            # Если дочерние страницы существуют
+            if child_pages.exists():
+                # Проверяем, что текущий объект находится среди дочерних страниц
+                if map_obj in child_pages:
+                    # Выводим родительскую страницу и ее дочерние страницы
+                    print(f"Родительская страница: {parent_page}")
+                    print("Дочерние страницы:")
+                    for child_page in child_pages:
+                        print(child_page)
+                        
 @csrf_exempt
 def next_page(request, idToNewPage):
-    
-
-
     map_instance = MAP.objects.get(id=idToNewPage)  # Используйте 'id' вместо 'idOfPage'
     nameOfPage = map_instance.nameOfPage
     map_internal_pages = map_instance.internal_pages.all()
@@ -58,6 +96,9 @@ def createNewPage(request):
     category =  MAP.objects.filter(FlagForInternalRecordings=0).values('id', 'nameOfPage')
     print(category)
     return render(request, 'createNewPage.html',{'category' : category} )
+
+
+    
 
 
 

@@ -15,9 +15,8 @@
             display: flex;
             flex-direction: column;
         }
-        .rectangle {
-            width: 200px;
-            height: 100px;
+        .circle {
+            border-radius: 50%; 
             margin: 0 auto;
             margin-top: 50px;
             margin: 10px;
@@ -49,7 +48,7 @@ justify-content: center;align-items: center;">
     {% for page in map_internal_pages %}
         
             <a href="{% url 'map:next_page' idToNewPage=page.id  %}">
-                <div class="rectangle red">
+                <div class="circle red" style="width: {{page.countOfVW}}px; height: {{page.countOfVW}}px;">
                     
                 </div>
              

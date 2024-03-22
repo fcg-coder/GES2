@@ -4,10 +4,12 @@ from map.models import MAP
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from .models import page
+from map.models import countOfVirW 
 
 
 def index(request, idOfPage):
-    
+    VWS = page.objects.all()
+    countOfVirW(VWS)
     category = MAP.objects.get(id = idOfPage)
     print(category.nameOfPage)
     pages = page.objects.filter(map = category)
@@ -16,6 +18,7 @@ def index(request, idOfPage):
     print(pages)
     idOfPage = int(idOfPage)
     return render(request, 'listOfPages.html', {'map_internal_pages': pages, 'nameOfPage' : nameOfPage} )
+
 
 
 def openPage(request, idOfPage):
