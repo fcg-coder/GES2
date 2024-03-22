@@ -18,10 +18,48 @@
         #graph-container {
             height: 100vh;
         }
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: #d8d8d8;
+            border: 19px;
+            border-color: grey;
+            overflow-x: hidden;
+            transition: 0.5s;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+        }
+
+        /* Стили для элементов бокового меню */
+        .sidebar-content {
+            padding: 16px;
+            
+        }
+
+        /* Стили для кнопки открытия бокового меню */
+        #openSidebarBtn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        /* Стили для элементов фильтра */
+        .filter-checkbox {
+            margin-bottom: 8px;
+        }
+       
     </style>
 </head>
 <body>
     <h1>Hierarchical Structure of Categories, Subcategories, and Worlds on the Website</h1>
+    
     <div id="graph-container"></div>
 
     <script>
@@ -56,6 +94,9 @@
                 color: {
                     background: 'white',
                     border: 'black'
+                },
+                font: {
+                    face: 'Josefin Sans', // Задаем выбранный шрифт
                 }
             }
         };
