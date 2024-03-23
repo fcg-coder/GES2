@@ -19,11 +19,12 @@ from .models import countOfVirW
 
 def index(request):
     id = int(0)
-    pages = MAP.objects.all()
-
-    find_parents_and_children()
     VWS = page.objects.all()
     countOfVirW(VWS)
+    find_parents_and_children()
+    pages = MAP.objects.filter(FlagForThePresenceOfAParent=0)
+   
+    
  
     return render(request, 'base.html', {'pages': pages})
 
@@ -94,8 +95,19 @@ def next_page(request, idToNewPage):
 
 def createNewPage(request):
     category =  MAP.objects.filter(FlagForInternalRecordings=0).values('id', 'nameOfPage')
-    print(category)
-    return render(request, 'createNewPage.html',{'category' : category} )
+    all_pages = page.objects.all()
+
+    
+    
+    all_text_tags = set()
+    all_graphical_tags = set()
+
+    for page_obj in all_pages:
+        all_text_tags.update(page_obj.TEXT_BASED_MMO_CHOICES)
+        all_graphical_tags.update(page_obj.GRAPHICAL_MMO_CHOICES)
+
+    return render(request, 'createNewPage.html',{'category' : category  , 'all_text_tags': all_text_tags,
+        'all_graphical_tags': all_graphical_tags,} )
 
 
     

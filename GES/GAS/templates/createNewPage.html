@@ -61,6 +61,23 @@
             <option value="{{ categor.id }}">{{ categor.nameOfPage }}</option>
             {% endfor %}
         </select>
+
+        <label for="all_text_tags">all_text_tags</label>
+        <select id="all_text_tags" name="all_text_tags">
+            <option value=""></option> <!-- Пустая строка -->
+            {% for all_text_tag in all_text_tags %}
+            <option value="{{ all_text_tag.0 }}">{{ all_text_tag.1 }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="all_graphical_tags">all_graphical_tags</label>
+        <select id="all_graphical_tags" name="all_graphical_tags">
+            <option value=""></option> <!-- Пустая строка -->
+            {% for all_graphical_tag in all_graphical_tags %}
+            <option value="{{ all_graphical_tag.0 }}">{{ all_graphical_tag.1 }}</option>
+            {% endfor %}
+        </select>
+
         <br>
         <label for="nameOfPage">Имя страницы:</label>
         <input type="text" id="nameOfPage" name="nameOfPage" required>

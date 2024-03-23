@@ -14,7 +14,8 @@
             flex-direction: column;
         }
         .circle {
-            
+            width: 200px;
+            height: 200px;
             border-radius: 50%; 
             margin: 0 auto;
             margin-top: 50px;
@@ -77,17 +78,15 @@
    
     <div class="intro">
         {% for page in pages %}
-        {% if page.FlagForThePresenceOfAParent == 0%}
             <a href="{% url 'map:next_page' idToNewPage=page.id %}">
-                <div class="circle red" style="width: {{page.countOfVW}}px; height: {{page.countOfVW}}px;">
+                <div class="circle red" >
                       
                 </div>
             </a>
-            {{page.nameOfPage}}
-            {% endif %}
+            
+            {{ page.nameOfPage }}
         {% endfor %}
     </div>
-
 
 
     
