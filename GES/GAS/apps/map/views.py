@@ -23,7 +23,20 @@ def index(request):
     countOfVirW(VWS)
     find_parents_and_children()
     pages = MAP.objects.filter(FlagForThePresenceOfAParent=0)
-   
+    
+    allSize = 0
+    for Page in pages:
+        allSize += Page.countOfVW
+
+
+    for Page in pages:
+        Page.size = Page.countOfVW/allSize
+        print(Page.size)
+        Page.save()
+
+
+    
+
     
  
     return render(request, 'base.html', {'pages': pages})
@@ -78,6 +91,17 @@ def next_page(request, idToNewPage):
 
     id = int(idToNewPage)
     map_obj = MAP.objects.get(id = idToNewPage)
+
+    allSize = 0
+    for Page in map_internal_pages:
+        allSize += Page.countOfVW
+
+
+    for Page in map_internal_pages:
+        Page.size = round(Page.countOfVW/allSize * 10)
+        print(Page.size)
+        Page.save()
+
 
     FlagForInternalRecordingsPAGE = map_obj.FlagForInternalRecordings
     if (map_obj.internal_pages == None):
