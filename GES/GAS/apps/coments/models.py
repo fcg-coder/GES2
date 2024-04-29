@@ -1,5 +1,9 @@
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+from django.core.files.storage import default_storage
 from django.db import models
 import os
+from PAGE.models import page
 
 #Здесь будут описываться классы(один) коментариев 
 class Comment(models.Model):
@@ -7,9 +11,9 @@ class Comment(models.Model):
     pub_date = models.DateTimeField('Дата публикации')
     document = models.FileField(upload_to='documents/')
     documentName = models.CharField('Имя файла', max_length= 50)
-    idOfPage = models.IntegerField('Id страницы')
+    cat = models.ForeignKey(page, verbose_name='Страница на которой оставили комментарий', on_delete=models.CASCADE)
     username = models.CharField('Имя пользователя', max_length= 25)
-    adminNameComment = models.TextField('Имя объекта')
+    adminNameComment = models.TextField('Имя комментария')
     
     def is_image_file(self):
         # Получаем расширение файла
@@ -27,8 +31,14 @@ class Comment(models.Model):
     def __str__(self):
         return self.adminNameComment
     
-    
-    
+   
     class Meta:
         verbose_name = 'Коментарий'
         verbose_name_plural = 'Коментарии'
+
+
+    
+@receiver(pre_delete, sender=Comment)
+def delete_comment_document(sender, instance, **kwargs):
+    # Удаление документа при удалении комментария
+    default_storage.delete(instance.document.path)

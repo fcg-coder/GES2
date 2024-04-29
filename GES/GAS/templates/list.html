@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ nameOfPage }}</title>
+<<<<<<< HEAD:GES/GAS/templates/comments/list.html
+=======
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            
+        }
+        .intro{
+            display: flex;
+            flex-direction: column;
+        }
+        .rectangle {
+            width: 200px;
+            height: 100px;
+            margin: 0 auto;
+            margin-top: 50px;
+            margin: 10px;
+        }
+        .red {
+            background-color: red;
+        }
+        .blue {
+            background-color: blue;
+        }
+        .green {
+            background-color: green;
+        }
+        .yellow {
+            background-color: yellow;
+        }
+    </style>
+>>>>>>> master:GES/GAS/templates/list.html
+</head>
+
+<body>
+    
+<div style="display: flex;
+
+flex-wrap: nowrap;
+flex-direction: column;
+justify-content: center;align-items: center;">
+
+
+
+<div class="form" style="display: flex; justify-content: center;">
+    <form style="display: flex; flex-direction: column;" method="post" action="{% url 'comments:leave_comment' idOfPage %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" id="usernameInput" name="username" value="{{ username }}" required>
+       
+         
+        <!-- Текстовый комментарий -->
+        <textarea name="comment_text"></textarea>
+        
+        <!-- Загрузка файла -->
+        <input type="file" name="document">
+        
+        <!-- Кнопка отправки формы -->
+        <button type="submit">Отправить</button>
+      </form>
+    
+
+</div>
+
+
+<div class="content" style="display: flex; justify-content: center;display: flex;
+justify-content: center;
+
+    flex-direction: column;">
+
+  {% for a in obj  reversed %}
+        <div style="padding: 14px; margin: 13px; background-color: #e8e8e8; border-radius: 20px;">
+            
+            
+            <div>Имя: {{ a.username }}  <p class="timeAgo">{{ a.pub_date|timesince:nowTime }} назад</p> </div>
+           
+
+            
+            {% if a.comment_text %}
+                <p>Коментарий:  {{ a.comment_text }}</p><br>
+            {% endif %}
+            {% if a.document %}
+                <p>
+                    {% if a.is_image_file %}
+                        <img src="{{ a.document.url }}" alt="Фото комментария" style="width: 200px; height: auto;">
+                    {% else %}
+                        Документ:<br> 
+                        <a href="{{ a.document.url }}"> {{ a.documentName }}</a>
+                    {% endif %}
+                </p>
+            {% endif %}
+            <!-- <p>Дата создания:<br> {{ a.pub_date }}</p> -->
+            
+        </div>
+{% endfor %}
+
+</div>
+</div>
+</body>
+</html>
