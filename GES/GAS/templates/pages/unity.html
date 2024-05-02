@@ -1,0 +1,32 @@
+<!-- unity_page.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unity Page</title>
+</head>
+<body>
+    <h1>Welcome to Unity Page</h1>
+    <button id="loadUnityApp">Load Unity App</button>
+    <div id="unityContainer"></div>
+
+    <script>
+        document.getElementById('loadUnityApp').addEventListener('click', function() {
+            // Создание iframe
+            var iframe = document.createElement('iframe');
+            iframe.src = 'http://127.0.0.1:8080/'; // Замените на реальный URL вашего Unity приложения
+            iframe.style.width = '100%';
+            iframe.style.height = '700px'; // Укажите нужную высоту для вашего iframe
+            iframe.style.border = 'none';
+            
+            // Очистка контейнера перед загрузкой нового iframe (если необходимо)
+            var unityContainer = document.getElementById('unityContainer');
+            unityContainer.innerHTML = '';
+            
+            // Добавление iframe на страницу
+            unityContainer.appendChild(iframe);
+        });
+    </script>
+</body>
+</html>
