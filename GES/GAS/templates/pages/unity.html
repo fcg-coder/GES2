@@ -1,32 +1,46 @@
-<!-- unity_page.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unity Page</title>
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #unityContainer {
+            width: 100%;
+            height: 100%;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Unity Page</h1>
-    <button id="loadUnityApp">Load Unity App</button>
-    <div id="unityContainer"></div>
+    <div id="unityContainer">
+        <iframe src="http://127.0.0.1:8080/"></iframe>
+    </div>
 
     <script>
-        document.getElementById('loadUnityApp').addEventListener('click', function() {
-            // Создание iframe
-            var iframe = document.createElement('iframe');
-            iframe.src = 'http://127.0.0.1:8080/'; // Замените на реальный URL вашего Unity приложения
-            iframe.style.width = '100%';
-            iframe.style.height = '700px'; // Укажите нужную высоту для вашего iframe
-            iframe.style.border = 'none';
-            
-            // Очистка контейнера перед загрузкой нового iframe (если необходимо)
-            var unityContainer = document.getElementById('unityContainer');
-            unityContainer.innerHTML = '';
-            
-            // Добавление iframe на страницу
-            unityContainer.appendChild(iframe);
-        });
+        // Если вы хотите открыть Unity на весь экран, установите параметры FullScreenWindow
+        var iframe = document.querySelector('iframe');
+        iframe.allow = 'fullscreen';
+
+        // Можно также использовать API Fullscreen, чтобы включить полноэкранный режим:
+         iframe.requestFullscreen();
+
+        // Если вам нужно отключить полноэкранный режим, используйте:
+        // document.exitFullscreen();
     </script>
 </body>
 </html>
+
+
