@@ -1,0 +1,9 @@
+FROM nginx:alpine
+
+# Копируем конфигурационные файлы
+COPY webgl.conf /etc/nginx/conf.d/webgl.conf
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+# Переходим в директорию с файлами для webgl
+WORKDIR /webgl
+COPY webgl/ .
