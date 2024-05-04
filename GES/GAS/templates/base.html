@@ -74,6 +74,39 @@
     </style>
 </head>
 <body>
+<<<<<<< HEAD
+
+    <div class="intro">
+        {% for page in pages %}
+
+        {% if page.status == 'published' %}
+            <a href="{% url 'map:next_page' idToNewPage=page.id nameOfPage=page.nameOfPage %}">
+                <div class="rectangle red">
+                </div>
+            </a>
+
+        {% endif %}
+        {% endfor %}
+    </div>
+
+
+
+    <div class="form" style="display: flex; justify-content: center;">
+            <form style="display: flex; flex-direction: column;" method="post" action="{% url 'map:newPage' %}">
+                {% csrf_token %}
+                <label for="nameOfPage">Имя страницы:</label>
+                <input type="text" id="nameOfPage" name="nameOfPage">
+                <input type="submit" value="Создать">
+              </form>
+        
+        
+    
+    </div>
+
+    
+</a>
+</div>
+=======
 
    
     <div class="intro">
@@ -200,5 +233,6 @@
            </li>    
         </ul>
     </div>
+>>>>>>> master
 </body>
 </html>
