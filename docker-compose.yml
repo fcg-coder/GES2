@@ -1,24 +1,30 @@
 version: '3.8'
 
 services:
-  web:
-    container_name: web
-    build: 
-      context: .
-      dockerfile: Dockerfile.web
-    image: web
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./GES:/GES
-    command: >
-      sh -c "python manage.py runserver 0.0.0.0:8000"
 
-  webgl:
+  nginx:
     container_name: unity
     image: unity
     build: 
       context: .
       dockerfile: Dockerfile.unity
     ports:
-      - "8080:80"
+      - 8080:80
+
+  web:
+    container_name: web
+    build: 
+      context: .
+      dockerfile: Dockerfile.web
+    image: web
+    expose:
+      - 8000
+    volumes:
+      - ./GES:/GES
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
+
+  
+
+  # В контейнере два сервиса. nginx -  обратный прокси веб-сервер + сенрвер для unity. 
+  # И веб 
