@@ -29,7 +29,7 @@
 
 # Техническая часть проекта
 ## Структура проекта
-
+```
 GES2/
 ├── GES/                                *Директория Django*
 |   ├── GAS/
@@ -53,7 +53,7 @@ GES2/
 ├── Dockerfile.nginx                    *Докер файл для сервиса nginx*
 ├── Dockerfile.web                      *Докер файл для сервиса web(python Django)*
 └── requirements.txt                    *Зависомости для сервиса web(python Django)*
-
+```
 ### Технологии
 
 - Python 3.9 + Django
