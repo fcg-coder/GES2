@@ -1,6 +1,16 @@
 version: '3.8'
 
 services:
+
+  nginx:
+    container_name: unity
+    image: unity
+    build: 
+      context: .
+      dockerfile: Dockerfile.unity
+    ports:
+      - 8080:80
+
   web:
     container_name: web
     build: 
@@ -14,25 +24,7 @@ services:
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
 
-  unity:
-    container_name: unity
-    image: unity
-    build: 
-      context: .
-      dockerfile: Dockerfile.unity
-    expose:
-      - 8080:80 
-    ports:
-      - 8080:80
-
-    
   
-  nginx:
-    container_name: nginx 
-    image: nginx
-    build: ./nginx
-    ports:
-      - 1337:80
-    depends_on:
-      - web
-      - unity
+
+  # В контейнере два сервиса. nginx -  обратный прокси веб-сервер + сенрвер для unity. 
+  # И веб 
