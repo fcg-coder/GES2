@@ -7,18 +7,32 @@ services:
       context: .
       dockerfile: Dockerfile.web
     image: web
-    ports:
-      - "8000:8000"
+    expose:
+      - 8000
     volumes:
       - ./GES:/GES
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
 
-  webgl:
+  unity:
     container_name: unity
     image: unity
     build: 
       context: .
       dockerfile: Dockerfile.unity
+    expose:
+      - 8080:80 
     ports:
-      - "8080:80"
+      - 8080:80
+
+    
+  
+  nginx:
+    container_name: nginx 
+    image: nginx
+    build: ./nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+      - unity
