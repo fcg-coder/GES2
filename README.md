@@ -31,28 +31,28 @@
 ## Структура проекта
 
 GES2/
-├── GES/                            *Директория Django*
+├── GES/                                *Директория Django*
 |   ├── GAS/
 |   |   └── GAS/
 |   |       └── apps/
-|   |           ├── comments        *Обработка комментариев на сайте*
-|   |           ├── map             *Перемещение по категориям (Карте)*
-|   |           ├── PAGE            *Контент на страницах*
-|   |           ├── service         *Сервисы (feedback)*
+|   |           ├── comments            *Обработка комментариев на сайте*
+|   |           ├── map                 *Перемещение по категориям (Карте)*
+|   |           ├── PAGE                *Контент на страницах*
+|   |           └── service             *Сервисы (feedback)*
 |   ├── media/
 |   ├── static/
 |   ├── db.sqlite3
 |   └── manage.py  
 |
-├── webgl/                          *Директория приложения Unity(webGL)*
-|   ├── Build
+├── webgl/                              *Директория приложения Unity(webGL)*
+|   ├── Build/
 |   └── index.html
 |
-├── default.conf                    *Файл конфигурации nginx, который определяет его как обратный прокси сервер*
-├── docker-compose.yml              *Докеркомпос файл с определением двух сервисов -> nginx и web(python Django)*
-├── Dockerfile.nginx                *Докер файл для сервиса nginx*
-├── Dockerfile.web                  *Докер файл для сервиса web(python Django)*
-└── requirements.txt                *Зависомости для сервиса web(python Django)*
+├── default.conf                        *Файл конфигурации nginx, который определяет его как обратный прокси сервер*
+├── docker-compose.yml                  *Докеркомпос файл с определением двух сервисов -> nginx и web(python Django)*
+├── Dockerfile.nginx                    *Докер файл для сервиса nginx*
+├── Dockerfile.web                      *Докер файл для сервиса web(python Django)*
+└── requirements.txt                    *Зависомости для сервиса web(python Django)*
 
 ### Технологии
 
