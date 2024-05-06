@@ -3,11 +3,11 @@ version: '3.8'
 services:
 
   nginx:
-    container_name: unity
-    image: unity
+    container_name: nginx
+    image: nginx
     build: 
       context: .
-      dockerfile: Dockerfile.unity
+      dockerfile: Dockerfile.nginx
     ports:
       - 8080:80
 
