@@ -19,6 +19,12 @@ from .models import countOfVirW
 
 def index(request):
     id = int(0)
+<<<<<<< HEAD
+    pages = MAP.objects.all()
+    #for page in pages:
+     #   print(page.id)
+    return render(request, 'base.html',{'pages': pages } )
+=======
     VWS = page.objects.all()
     countOfVirW(VWS)
     find_parents_and_children()
@@ -27,6 +33,7 @@ def index(request):
     allSize = 0
     for Page in pages:
         allSize += Page.countOfVW
+>>>>>>> master
 
 
     for Page in pages:
@@ -79,6 +86,32 @@ def find_parents_and_children():
                         print(child_page)
                         
 @csrf_exempt
+<<<<<<< HEAD
+def next_page(request, idToNewPage, nameOfPage):
+    id = int(idToNewPage)
+    nameOfPage = nameOfPage
+    newPage = MAP(id=id, nameOfPage = nameOfPage)
+    newPage.status = 'published'
+    newPage.save()
+    return redirect('comments:index', idOfPage=id)
+
+
+#ДОБАВИТЬ КАВЕР 
+def newPage(request):
+    if request.method == 'POST':
+        nameOfPage = request.POST.get('nameOfPage')
+        pages = MAP.objects.all()
+        max_index = max(pages, key=lambda x: x.id)
+        page = MAP(nameOfPage=nameOfPage, id=max_index.id+1, status = 'pending')
+        page.save()
+        pages = MAP.objects.all()
+        return redirect('map:index')
+    else:
+        pages = MAP.objects.all()
+        return redirect('map:index')
+    
+
+=======
 def next_page(request, idToNewPage):
     map_instance = MAP.objects.get(id=idToNewPage)  # Используйте 'id' вместо 'idOfPage'
     nameOfPage = map_instance.nameOfPage
@@ -206,3 +239,4 @@ def euler_diagram_view(request):
 
     # Верните сгенерированную диаграмму в виде ответа от представления
     return render(request, 'euler_diagram.html')
+>>>>>>> master
