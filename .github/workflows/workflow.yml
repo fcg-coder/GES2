@@ -17,4 +17,4 @@ jobs:
       
     - name: Run Docker Compose
       run: |
-        docker-compose up --build -d GES2
+        docker-compose up --build
