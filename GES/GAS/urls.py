@@ -24,15 +24,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', include('map.urls')),
     path('', include('coments.urls')),
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-    path('', include('PAGE.urls')), 
->>>>>>> Stashed changes
-=======
     path('', include('PAGE.urls')),
     path('', include('service.urls')),
->>>>>>> master
     path('admin/', admin.site.urls),
     path('', include('django.contrib.flatpages.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

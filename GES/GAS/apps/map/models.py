@@ -1,18 +1,9 @@
 from django.db import models
 
-
 class MAP(models.Model):
     id = models.Index('id', name='Id страницы')
     idOfPage = id
     page_id = id
-<<<<<<< HEAD
-    STATUS_CHOICES = (
-        ('pending', 'На рассмотрении'),
-        ('published', 'Опубликовано'),
-    )
-    status = models.CharField('Статус', max_length=20, choices=STATUS_CHOICES)
-    nameOfPage = models.CharField('Имя страницы', max_length= 50)
-=======
     FlagForInternalRecordings = models.IntegerField('Флаг на наличие подкатегорий')
     nameOfPage = models.CharField('Имя категории', max_length=50)
     FlagForThePresenceOfAParent = models.IntegerField('Флаг наличия родительской категории')
@@ -21,15 +12,10 @@ class MAP(models.Model):
     parent_page = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='child_pages')
 
 
->>>>>>> master
     def __str__(self):
         return self.nameOfPage
 
     class Meta:
-<<<<<<< HEAD
-        verbose_name = 'Страница'
-        verbose_name_plural = 'Страницы'
-=======
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
@@ -67,4 +53,3 @@ def countOfVirW(VWS):
                 parentPage.save()
 
             page = parentPages.first()  # Выберите одну родительскую страницу для следующей итерации
->>>>>>> master
