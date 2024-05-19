@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: Dockerfile.nginx
     ports:
-      - 8080:80
+      - 8000:80
 
   web:
     container_name: web
@@ -18,11 +18,11 @@ services:
       dockerfile: Dockerfile.web
     image: web
     expose:
-      - 8000
+      - 8080
     volumes:
       - ./GES:/GES
     command: >
-      sh -c "python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py runserver 0.0.0.0:8080"
 
   
 

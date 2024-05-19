@@ -6,7 +6,7 @@ COPY GES /GES
 
 WORKDIR /GES
 
-EXPOSE 8000
+EXPOSE 8080
 
 RUN pip install -r /app/requirements.txt
 
