@@ -10,17 +10,18 @@ services:
       dockerfile: Dockerfile.nginx
     ports:
       - 8080:80
-
-  web:
-    container_name: web
+    depends_on:
+      - frontend
+  backend:
+    container_name: backend
     build: 
       context: .
-      dockerfile: Dockerfile.web
-    image: web
+      dockerfile: Dockerfile.backend
+    image: backend
     expose:
       - 8000
     volumes:
-      - ./GES:/GES
+      - ./backend:/backend
       - postgres_data:/var/lib/postgresql/data
     environment:
       - DB_HOST=database
@@ -41,7 +42,7 @@ services:
       expose:
         - 3000
       depends_on:
-        - web
+        - backend
 
   database:
     container_name: database

@@ -1,9 +1,9 @@
 FROM python:3.9-alpine3.16
 
 COPY requirements.txt /app/requirements.txt 
-COPY GES /GES
+COPY backend /backend
 
-WORKDIR /GES
+WORKDIR /backend
 
 EXPOSE 8000
 
