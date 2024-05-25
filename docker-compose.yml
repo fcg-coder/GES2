@@ -33,6 +33,16 @@ services:
     depends_on:
       - database
 
+  frontend:
+      container_name: frontend
+      build: 
+        context: .
+        dockerfile: Dockerfile.frontend
+      expose:
+        - 3000
+      depends_on:
+        - web
+
   database:
     container_name: database
     image: postgres:14.6-alpine
