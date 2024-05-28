@@ -1,17 +1,20 @@
+import React, { useState } from 'react';
+import './App.css';
 import Footer from "./components/Footer";
-import { useState } from "react";
+import Map from "./components/Map";
 
 export default function App() {
-  const [active, setActive] = useState("home"); 
+  const [key, setKey] = useState(0);
 
-  const handleSectionChange = (newActive) => {
-    setActive(newActive);
+  const handleClick = () => {
+    setKey(prevKey => prevKey + 1);
   };
 
   return (
-    <>
-     
+    <body>
+      <Map key={key} />
+      <button onClick={handleClick}>Перерисовать</button>
       <Footer />
-    </>
+    </body>
   );
 }

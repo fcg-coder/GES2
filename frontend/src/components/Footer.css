@@ -1,0 +1,9 @@
+.footerLinks{
+
+        display: flex;
+        /* align-content: center; */
+        justify-content: space-evenly;
+        width: 100vw;
+        flex-direction: row;
+
+}
