@@ -1,11 +1,24 @@
-FROM node:17-alpine
+
+# Используем более стабильную версию Node.js
+FROM node:18.17.0-alpine
+
+# Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
-COPY frontend/package.json .
+
+# Копируем package.json и package-lock.json в рабочую директорию
+COPY frontend/package*.json ./
+
+# Устанавливаем все зависимости
 RUN npm install
 RUN npm install axios
 RUN npm i handy-svg
 RUN npm install react-svg
 
-COPY frontend .
+# Копируем остальной код приложения в контейнер
+COPY frontend/ .
+
+# Открываем порт 3000 для внешнего доступа
 EXPOSE 3000
+
+# Запускаем приложение
 CMD ["npm", "start"]
