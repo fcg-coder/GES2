@@ -1,41 +1,44 @@
-// FormDistributor.js
-import React from 'react';
-import Blob from './FormCreator';
+import React, { useEffect, useState } from 'react';
+import { ReactSVG } from 'react-svg'; // Импорт компонента ReactSVG из библиотеки react-svg
+import iconSrc from './map_full.svg'; // Импорт SVG файла, который содержит карту
 
-const generateRandomPosition = () => ({
-    x: Math.random() * 800, // Генерируем случайную координату X в пределах ширины контейнера
-    y: Math.random() * 600, // Генерируем случайную координату Y в пределах высоты контейнера
-});
-
-const FormDistributor = ({ onFormClick }) => { // Добавляем свойство onFormClick для обработки клика на формы
-    const numForms = 5; // всегда 5 форм
-    const numPoints = 100; // количество точек в каждой форме
-    const numComponents = 5; // количество компонентов кривой
-
-
-    const containerStyle = {
-        height: '100%'
+// Компонент Map
+const Map = () => {
+    // Функция для обработки события наведения на путь
+    const handleMouseEnter = (event) => {
+        // Устанавливаем цвет заливки для элемента SVG
+        event.target.style.fill = 'red'; // Замените 'red' на любой другой цвет по вашему выбору
     };
 
-    
-    const handleClick = () => {
-        if (typeof onFormClick === 'function') {
-            onFormClick(); // Вызываем функцию обратного вызова при клике на форму
-        }
+    // Функция для обработки события убирания мыши с пути
+    const handleMouseLeave = (event) => {
+        // Сбрасываем цвет заливки элемента SVG на его исходное значение
+        event.target.style.fill = ''; // Возвращаем оригинальный цвет
     };
+
+    // Хук состояния для отслеживания размеров окна
+    const [windowDimensions, setWindowDimensions] = useState({ width: 0, height: 0 });
+
+    // Хук эффекта для добавления обработчиков событий и отслеживания изменения размеров окна
+
 
     return (
-        <div style= {containerStyle}>
-            {[...Array(numForms)].map((_, index) => {
-                const { x, y } = generateRandomPosition(); // Генерируем случайные координаты
-                return (
-                    <div key={index} style={{ position: 'absolute', left: x, top: y }}>
-                        <Blob numPoints={numPoints} numComponents={numComponents} onClick={handleClick} /> {/* Добавляем обработчик клика */}
-                    </div>
-                );
-            })}
+        <div style={{ width: '80%', height: '80%' }}>
+            {/* Компонент ReactSVG для загрузки и отображения SVG файла */}
+            <ReactSVG
+                src={iconSrc}
+                className="svg-icon"
+                beforeInjection={(svg) => {
+                    // Перед вставкой SVG в DOM добавляем обработчики событий ко всем элементам <path>
+                    Array.from(svg.querySelectorAll('path')).forEach((path) => {
+                        path.addEventListener('mouseenter', handleMouseEnter);
+                        path.addEventListener('mouseleave', handleMouseLeave);
+                    });
+                }}
+            />
         </div>
     );
 };
 
-export default FormDistributor;
+// Экспорт компонента Map как по умолчанию
+export default Map;

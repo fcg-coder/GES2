@@ -1,20 +1,14 @@
-import React, { useState } from 'react';
-import './App.css';
-import Footer from "./components/Footer";
-import Map from "./components/Map";
+import React from 'react';
+import Map from './components/Map'; // Импорт компонента по умолчанию из Map.jsx
+import Footer from './components/Footer'; // Импорт компонента Footer
 
-export default function App() {
-  const [key, setKey] = useState(0);
-
-  const handleClick = () => {
-    setKey(prevKey => prevKey + 1);
-  };
-
+function App() {
   return (
-    <body>
-      <Map key={key} />
-      <button onClick={handleClick}>Перерисовать</button>
-      <Footer />
-    </body>
+    <div>
+      <Map />
+      <Footer /> 
+    </div>
   );
 }
+
+export default App;

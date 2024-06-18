@@ -3,6 +3,9 @@ WORKDIR /app
 COPY frontend/package.json .
 RUN npm install
 RUN npm install axios
+RUN npm i handy-svg
+RUN npm install react-svg
+
 COPY frontend .
 EXPOSE 3000
 CMD ["npm", "start"]
