@@ -23,7 +23,7 @@ const Map = () => {
 
 
     return (
-        <div style={{ width: '80%', height: '80%' }}>
+        <div style={{ width: '80%',  margin:'auto' }}>
             {/* Компонент ReactSVG для загрузки и отображения SVG файла */}
             <ReactSVG
                 src={iconSrc}

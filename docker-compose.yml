@@ -20,6 +20,8 @@ services:
     image: backend
     expose:
       - 8000
+    ports:
+      - 8000:8000
     volumes:
       - ./backend:/backend
       - postgres_data:/var/lib/postgresql/data
