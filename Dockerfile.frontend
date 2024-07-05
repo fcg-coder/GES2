@@ -13,6 +13,8 @@ RUN npm install
 RUN npm install axios
 RUN npm i handy-svg
 RUN npm install react-svg
+RUN npm install react-router-dom
+
 
 # Копируем остальной код приложения в контейнер
 COPY frontend/ .
