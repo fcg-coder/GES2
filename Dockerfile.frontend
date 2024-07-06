@@ -14,6 +14,7 @@ RUN npm install axios
 RUN npm i handy-svg
 RUN npm install react-svg
 RUN npm install react-router-dom
+RUN npm install styled-components
 
 
 # Копируем остальной код приложения в контейнер

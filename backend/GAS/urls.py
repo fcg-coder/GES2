@@ -23,9 +23,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('backend/', include('map.urls')),
-    path('backend/', include('coments.urls')),
-    path('backend/', include('PAGE.urls')),
-    path('backend/', include('service.urls')),
+    path('backend/coments/', include('coments.urls')),
+    path('backend/page/', include('PAGE.urls')),
+    path('backend/service/', include('service.urls')),
     path('backend/admin/', admin.site.urls),
-    path('backend/', include('django.contrib.flatpages.urls')),
+    path('backend/flatpages/', include('django.contrib.flatpages.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

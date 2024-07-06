@@ -106,11 +106,23 @@ def next_page(request, idToNewPage):
     newPage = MAP(id=id, nameOfPage = nameOfPage, FlagForThePresenceOfAParent = FlagForThePresenceOfAParentPAGE, FlagForInternalRecordings = FlagForInternalRecordingsPAGE)
     newPage.save()
     
-    if (FlagForInternalRecordingsPAGE == 1):
-        return render(request, 'MAP.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
-    else:
-        print(idOfPage)
-        return redirect('PAGE:index', idOfPage=idOfPage)
+
+    data = {
+        'idOfPage': int(idToNewPage),
+        'nameOfPage': nameOfPage,
+        'map_internal_pages': [{
+            'id': page.id,
+            'countOfVW': page.countOfVW,
+            'size': page.size,
+            # Добавьте другие поля, которые вам нужны из модели MAPInternalPages
+        } for page in map_internal_pages],
+        'username': username,
+        'nowTime': nowTime.strftime('%Y-%m-%d %H:%M:%S'),  # Форматируем дату и время
+    }
+
+    # Возвращаем JsonResponse с подготовленными данными
+    return JsonResponse(data)
+
 
 def createNewPage(request):
     category =  MAP.objects.filter(FlagForInternalRecordings=0).values('id', 'nameOfPage')

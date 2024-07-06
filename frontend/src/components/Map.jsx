@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ReactSVG } from 'react-svg';
-import iconSrc from './map_full.svg'; // Импорт SVG файла, который содержит карту
+import axios from 'axios';
+import iconSrc from './map.svg'; // Импорт SVG файла, который содержит карту
 
 // Компонент Map
-const Map = () => {
+const Map = ({ onClick }) => {
+    const [data, setData] = useState(null);
+
+    // useEffect(() => {
+    //     axios.get('/backend/')
+    //         .then(response => {
+    //             setData(response.data);
+    //             console.log('Data received:', response.data); // Выводим данные в консоль
+    //         })
+    //         .catch(error => console.error('Error fetching data:', error));
+    // }, []);
+
     // Функция для обработки события наведения на путь
     const handleMouseEnter = (event) => {
-        event.target.style.fill = 'red'; // Изменяем цвет заливки при наведении
+        event.target.style.fill = 'wheat'; // Изменяем цвет заливки при наведении
     };
 
     // Функция для обработки события убирания мыши с пути
@@ -19,7 +31,8 @@ const Map = () => {
         const target = event.target;
         const dataUrl = target.getAttribute('data-url');
         if (dataUrl) {
-            window.location.href = dataUrl; // Переход на другую страницу по ссылке из атрибута data-url
+            console.log(dataUrl);
+            onClick(dataUrl); // Вызываем функцию onClick, переданную из App
         }
     };
 
@@ -29,23 +42,24 @@ const Map = () => {
             <ReactSVG
                 src={iconSrc}
                 className="svg-icon"
-                onClick={handleClick}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
                 beforeInjection={(svg) => {
                     // Добавление обработчиков событий к элементам <path> в SVG после вставки в DOM
+
+                    // cls-8 отвечает за заливку областей
                     Array.from(svg.querySelectorAll('path')).forEach((path) => {
-                        path.addEventListener('mouseenter', handleMouseEnter);
-                        path.addEventListener('mouseleave', handleMouseLeave);
-                        path.addEventListener('click', handleClick);
+                        if (path.getAttribute('class') === 'cls-8') {
+                            path.addEventListener('mouseenter', handleMouseEnter);
+                            path.addEventListener('mouseleave', handleMouseLeave);
+                            path.addEventListener('click', handleClick);
+                        }
                     });
                 }}
             />
             <style>{`
-                .svg-icon svg {
-                    transition: fill 0.2s ease-in-out; /* Плавное изменение цвета заливки */
-                }
-            `}</style>
+        .svg-icon svg {
+          transition: fill 0.2s ease-in-out; /* Плавное изменение цвета заливки */
+        }
+      `}</style>
         </div>
     );
 };
