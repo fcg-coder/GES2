@@ -17,52 +17,26 @@ const StyledSVG = styled.svg`
 
 const YourComponent = ({ initialDataUrl }) => {
     const [data, setData] = useState(null);
-    const [dataUrl, setDataUrl] = useState(initialDataUrl);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`/backend/${dataUrl}/`);
+                const response = await axios.get(initialDataUrl);
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
-                setData(generateRandomData()); // Если есть ошибка, используем случайные данные
             }
         };
 
-        if (dataUrl) {
+        if (initialDataUrl) {
             fetchData();
-        } else {
-            setData(generateRandomData());
         }
-    }, [dataUrl]);
-
-    // Функция для генерации случайных данных
-    const generateRandomData = () => {
-        const pageCount = random(2, 5); // Количество страниц
-        const pages = Array.from({ length: pageCount }, (_, i) => ({
-            id: i + 1,
-            countOfVW: random(1, 10),
-            size: random(3, 10),
-            nameOfPage: `Page ${i + 1}`
-        }));
-
-        return {
-            idOfPage: random(1, 100),
-            nameOfPage: "MMO",
-            map_internal_pages: pages,
-            username: null,
-            nowTime: new Date().toISOString()
-        };
-    };
+    }, [initialDataUrl]);
 
     const mapInternalPages = data?.map_internal_pages || [];
 
     const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-    const handleCircleClick = (pageId) => {
-        setDataUrl(`/map/next_page/${pageId}`);
-    };
 
     // Функция для обработки события наведения на круг
     const handleMouseEnter = (event) => {

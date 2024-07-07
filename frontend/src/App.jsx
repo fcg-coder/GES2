@@ -3,12 +3,12 @@ import Map from './components/Map';
 import Kategory from './components/Kategory'; // Импорт компонента Kategory
 import Footer from './components/Footer';
 
-function App() {
+const App = () => {
   const [dataUrl, setDataUrl] = useState(null); // Состояние для хранения dataUrl
 
   // Функция для обработки клика в компоненте Map
-  const handleMapClick = (dataUrl) => {
-    setDataUrl(dataUrl); // Устанавливаем dataUrl в состояние
+  const handleMapClick = (pageId) => {
+    setDataUrl(pageId); // Устанавливаем dataUrl в состояние
   };
 
   return (
@@ -17,11 +17,10 @@ function App() {
       {dataUrl === null ? (
         <Map onClick={handleMapClick} /> // Передаем функцию handleMapClick в Map
       ) : (
-        <Kategory dataUrl={dataUrl} /> // Передаем dataUrl в Kategory
+        <Kategory initialDataUrl={`/backend/${dataUrl}`} /> // Передаем dataUrl в Kategory через initialDataUrl
       )}
       <Footer />
     </div>
   );
-}
-
+};
 export default App;
