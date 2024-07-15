@@ -10,21 +10,51 @@ services:
       dockerfile: Dockerfile.nginx
     ports:
       - 8080:80
-
-  web:
-    container_name: web
+    # depends_on:
+    #   - frontend
+  backend:
+    container_name: backend
     build: 
       context: .
-      dockerfile: Dockerfile.web
-    image: web
+      dockerfile: Dockerfile.backend
+    image: backend
     expose:
       - 8000
+    ports:
+      - 8000:8000
     volumes:
-      - ./GES:/GES
-    command: >
-      sh -c "python manage.py runserver 0.0.0.0:8000"
+      - ./backend:/backend
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - DB_HOST=database
+      - DB_NAME=database
+      - DB_USER=user
+      - DB_PASS=pass
 
-  
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    
+    # depends_on:
+    #   - database
 
-  # В контейнере два сервиса. nginx -  обратный прокси веб-сервер + сенрвер для unity. 
-  # И веб 
+  frontend:
+      container_name: frontend
+      build: 
+        context: .
+        dockerfile: Dockerfile.frontend
+      expose:
+        - 3000
+      # depends_on:
+      #   - backend
+
+  database:
+    container_name: database
+    image: postgres:14.6-alpine
+    environment:
+      - POSTGRES_DB=database
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data: {}

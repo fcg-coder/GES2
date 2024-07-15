@@ -1,0 +1,23 @@
+{
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "config/git/commitizen.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS -g './config/git/commitlint.js'"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.2.1",
+    "cz-customizable": "^7.0.0",
+    "husky": "^1.1.3"
+  }
+}

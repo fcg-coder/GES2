@@ -1,0 +1,21 @@
+FROM python:3.9-alpine3.16
+
+COPY requirements.txt /app/requirements.txt 
+COPY backend /backend
+
+WORKDIR /backend
+
+EXPOSE 8000
+
+RUN apk add postgresql-client build-base postgresql-dev
+
+RUN pip install -r /app/requirements.txt
+RUN pip install psycopg2-binary
+
+RUN adduser --disabled-password fcg
+
+
+
+USER fcg
+
+
