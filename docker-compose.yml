@@ -10,17 +10,20 @@ services:
       dockerfile: Dockerfile.nginx
     ports:
       - 8080:80
-
-  web:
-    container_name: web
+    # depends_on:
+    #   - frontend
+  backend:
+    container_name: backend
     build: 
       context: .
-      dockerfile: Dockerfile.web
-    image: web
+      dockerfile: Dockerfile.backend
+    image: backend
     expose:
       - 8000
+    ports:
+      - 8000:8000
     volumes:
-      - ./GES:/GES
+      - ./backend:/backend
       - postgres_data:/var/lib/postgresql/data
     environment:
       - DB_HOST=database
@@ -30,8 +33,18 @@ services:
 
     command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     
-    depends_on:
-      - database
+    # depends_on:
+    #   - database
+
+  frontend:
+      container_name: frontend
+      build: 
+        context: .
+        dockerfile: Dockerfile.frontend
+      expose:
+        - 3000
+      # depends_on:
+      #   - backend
 
   database:
     container_name: database

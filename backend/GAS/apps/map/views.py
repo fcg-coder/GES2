@@ -7,7 +7,7 @@ from PAGE.models import page
 from coments.models import Comment
 import plotly.graph_objects as go
 from django.utils import timezone
-
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -18,28 +18,23 @@ import pickle
 from .models import countOfVirW 
 
 def index(request):
-    id = int(0)
-    VWS = page.objects.all()
-    countOfVirW(VWS)
-    find_parents_and_children()
-    pages = MAP.objects.filter(FlagForThePresenceOfAParent=0)
-    
-    allSize = 0
-    for Page in pages:
-        allSize += Page.countOfVW
+    try:
+        VWS = page.objects.all()
+        countOfVirW(VWS)
+        find_parents_and_children()
+        pages = MAP.objects.filter(FlagForThePresenceOfAParent=0)
 
+        allSize = sum(Page.countOfVW for Page in pages)
 
-    for Page in pages:
-        Page.size = Page.countOfVW/allSize
-        print(Page.size)
-        Page.save()
+        for Page in pages:
+            Page.size = Page.countOfVW / allSize
+            Page.save()
 
+        pages_data = [{"id": Page.id, "nameOfPage": Page.nameOfPage, "size": Page.size} for Page in pages]
+        return JsonResponse({"pages": pages_data})
 
-    
-
-    
- 
-    return render(request, 'base.html', {'pages': pages})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 
 def find_parents_and_children():
@@ -111,11 +106,23 @@ def next_page(request, idToNewPage):
     newPage = MAP(id=id, nameOfPage = nameOfPage, FlagForThePresenceOfAParent = FlagForThePresenceOfAParentPAGE, FlagForInternalRecordings = FlagForInternalRecordingsPAGE)
     newPage.save()
     
-    if (FlagForInternalRecordingsPAGE == 1):
-        return render(request, 'MAP.html', {'obj': obj, 'idOfPage': idOfPage, 'username': username, 'nowTime' : nowTime, 'nameOfPage' : nameOfPage,  'map_internal_pages' : map_internal_pages} )
-    else:
-        print(idOfPage)
-        return redirect('PAGE:index', idOfPage=idOfPage)
+
+    data = {
+        'idOfPage': int(idToNewPage),
+        'nameOfPage': nameOfPage,
+        'map_internal_pages': [{
+            'id': page.id,
+            'countOfVW': page.countOfVW,
+            'size': page.size,
+            # Добавьте другие поля, которые вам нужны из модели MAPInternalPages
+        } for page in map_internal_pages],
+        'username': username,
+        'nowTime': nowTime.strftime('%Y-%m-%d %H:%M:%S'),  # Форматируем дату и время
+    }
+
+    # Возвращаем JsonResponse с подготовленными данными
+    return JsonResponse(data)
+
 
 def createNewPage(request):
     category =  MAP.objects.filter(FlagForInternalRecordings=0).values('id', 'nameOfPage')

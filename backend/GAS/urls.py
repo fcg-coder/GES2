@@ -22,10 +22,10 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path('', include('map.urls')),
-    path('', include('coments.urls')),
-    path('', include('PAGE.urls')),
-    path('', include('service.urls')),
-    path('admin/', admin.site.urls),
-    path('', include('django.contrib.flatpages.urls')),
+    path('backend/', include('map.urls')),
+    path('backend/coments/', include('coments.urls')),
+    path('backend/page/', include('PAGE.urls')),
+    path('backend/service/', include('service.urls')),
+    path('backend/admin/', admin.site.urls),
+    path('backend/flatpages/', include('django.contrib.flatpages.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

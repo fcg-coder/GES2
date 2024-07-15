@@ -30,7 +30,10 @@ SECRET_KEY = 'django-insecure-!!5bq4793%6#1b!$jp66b586v1@_ov1gmd2v7ou=wnz_z%f_)_
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:8080",
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -89,14 +92,14 @@ WSGI_APPLICATION = 'GAS.wsgi.application'
 # }
 
 DATABASES= {
-        'default': {
+        'archive': {
                 'ENGINE': 'django.db.backends.postgresql',
                 'HOST': os.environ.get('DB_HOST'),
                 'NAME': os.environ.get('DB_NAME'),
                 'USER': os.environ.get('DB_USER'),
                 'PASSWORD': os.environ.get('DB_PASS'),
             },
-        'archive': {
+        'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': BASE_DIR / 'db.sqlite3',
             }
