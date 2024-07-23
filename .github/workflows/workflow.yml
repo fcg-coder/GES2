@@ -18,6 +18,11 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+    - name: Add server to known hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H 89.19.216.56 >> ~/.ssh/known_hosts
+
     - name: Copy files via SSH
       run: |
         scp -r ./* root@89.19.216.56:/path/to/deploy
