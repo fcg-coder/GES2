@@ -1,22 +1,29 @@
-name: GES2
+name: Deploy to Server
 
 on:
   push:
-    branches: 
-      - main
+    branches:
+      - master  # Запускать пайплайн при пуше в ветку main
 
 jobs:
-
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        
-      - name: Run Docker Compose
-        run: |
-          docker-compose up --build -d
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.8.1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Copy files via SSH
+      run: |
+        scp -r ./* root@89.19.216.56:/path/to/deploy
+
+    - name: Run docker-compose
+      run: |
+        ssh root@89.19.216.56 "
+          cd /path/to/deploy && docker-compose down && docker-compose up --build -d
+        "

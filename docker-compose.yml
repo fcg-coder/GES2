@@ -12,6 +12,9 @@ services:
       - 8080:80
     # depends_on:
     #   - frontend
+    restart: always
+
+    
   backend:
     container_name: backend
     build: 
