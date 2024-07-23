@@ -10,19 +10,19 @@ export default function PageHome() {
             <span>INFORMATION</span>
             <ul>
               <li>
-                <a href="/about/">About us</a>
+                <a href="/backend/about/">About us</a>
               </li>
               <li>
-                <a href="/create/">Create new page</a>
+                <a href="/backend/create/">Create new page</a>
               </li>
               <li>
-                <a href="/feedback/">Feedback</a>
+                <a href="/backend/feedback/">Feedback</a>
               </li>
               <li>
                 <a href="/webgl/">Unity</a>
               </li>
               <li>
-                <a href="/donation/">Donation</a>
+                <a href="/backend/donation/">Donation</a>
               </li>
             </ul>
           </li>
@@ -32,10 +32,10 @@ export default function PageHome() {
             <span>ALTERNATIVE VIEW</span>
             <ul>
               <li>
-                <a href="/graph/">Graph</a>
+                <a href="/backend/graph/">Graph</a>
               </li>
               <li>
-                <a href="/diagram/">Diagram</a>
+                <a href="/backend/diagram/">Diagram</a>
               </li>
             </ul>
           </li>
