@@ -1,20 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { ReactSVG } from 'react-svg';
-import axios from 'axios';
 import iconSrc from './map.svg'; // Импорт SVG файла, который содержит карту
+import { getCurrentTheme } from '../themeConfig'; // Импортируем функцию для получения текущей темы
+import { ThemeProvider } from 'styled-components';
+import styled from 'styled-components';
 
-// Компонент Map
+// Создаем стилизованный компонент для обертки
+const MapContainer = styled.div`
+  height: 100vh;
+  width: 100vw;
+  margin: auto;
+  overflow: hidden;
+  background: ${props => props.theme.backgroundColor}; // Используем тему
+`;
+
 const Map = ({ onClick }) => {
-    const [data, setData] = useState(null);
-
-    // useEffect(() => {
-    //     axios.get('/backend/')
-    //         .then(response => {
-    //             setData(response.data);
-    //             console.log('Data received:', response.data); // Выводим данные в консоль
-    //         })
-    //         .catch(error => console.error('Error fetching data:', error));
-    // }, []);
+    const [scale, setScale] = useState(1);
+    const [transform, setTransform] = useState('translate(0, 0) scale(1)');
+    const svgRef = useRef(null);
+    const theme = getCurrentTheme(); // Получаем текущую тему
 
     // Функция для обработки события наведения на путь
     const handleMouseEnter = (event) => {
@@ -37,30 +41,37 @@ const Map = ({ onClick }) => {
     };
 
     return (
-        <div style={{ width: '80%', margin: 'auto', overflow: 'hidden' }}>
-            {/* Компонент ReactSVG для загрузки и отображения SVG файла */}
-            <ReactSVG
-                src={iconSrc}
-                className="svg-icon"
-                beforeInjection={(svg) => {
-                    // Добавление обработчиков событий к элементам <path> в SVG после вставки в DOM
-
-                    // cls-8 отвечает за заливку областей
-                    Array.from(svg.querySelectorAll('path')).forEach((path) => {
-                        if (path.getAttribute('class') === 'cls-8') {
-                            path.addEventListener('mouseenter', handleMouseEnter);
-                            path.addEventListener('mouseleave', handleMouseLeave);
-                            path.addEventListener('click', handleClick);
-                        }
-                    });
-                }}
-            />
-            <style>{`
-        .svg-icon svg {
-          transition: fill 0.2s ease-in-out; /* Плавное изменение цвета заливки */
-        }
-      `}</style>
-        </div>
+        <ThemeProvider theme={theme}>
+            <MapContainer>
+                {/* Компонент ReactSVG для загрузки и отображения SVG файла */}
+                <ReactSVG
+                    src={iconSrc}
+                    ref={svgRef}
+                    className="svg-icon"
+                    beforeInjection={(svg) => {
+                        // Добавление обработчиков событий к элементам <path> в SVG после вставки в DOM
+                        Array.from(svg.querySelectorAll('path')).forEach((path) => {
+                            if (path.getAttribute('class') === 'cls-8') {
+                                path.addEventListener('mouseenter', handleMouseEnter);
+                                path.addEventListener('mouseleave', handleMouseLeave);
+                                path.addEventListener('click', handleClick);
+                            }
+                        });
+                    }}
+                />
+                <style>{`
+                    .svg-icon svg {
+                        transition: transform 0.3s ease-in-out; /* Плавное масштабирование */
+                        width: 80%; /* Занимает 100% ширины */
+                        height: 80vh; /* Занимает 100% высоты */
+                        margin: auto;
+                    }
+                    .svg-icon path {
+                        transition: fill 0.2s ease-in-out; /* Плавное изменение цвета заливки */
+                    }
+                `}</style>
+            </MapContainer>
+        </ThemeProvider>
     );
 };
 

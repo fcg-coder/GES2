@@ -10,8 +10,8 @@ services:
       dockerfile: Dockerfile.nginx
     ports:
       - 8080:80
-    # depends_on:
-    #   - frontend
+    depends_on:
+      - frontend
     restart: always
 
     
@@ -36,8 +36,8 @@ services:
 
     command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     
-    # depends_on:
-    #   - database
+    depends_on:
+      - database
 
   frontend:
       container_name: frontend
@@ -46,8 +46,8 @@ services:
         dockerfile: Dockerfile.frontend
       expose:
         - 3000
-      # depends_on:
-      #   - backend
+      depends_on:
+        - backend
 
   database:
     container_name: database

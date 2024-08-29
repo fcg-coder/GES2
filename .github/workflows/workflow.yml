@@ -20,10 +20,10 @@ jobs:
 
     - name: Copy files via SSH
       run: |
-        scp -r ./* root@89.19.216.56:/path/to/deploy
+        scp -r ./* root@89.19.216.56:
 
     - name: Run docker-compose
       run: |
         ssh root@89.19.216.56 "
-          cd /path/to/deploy && docker-compose down && docker-compose up --build -d
+           docker-compose down && docker-compose up --build -d
         "
