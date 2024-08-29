@@ -1,39 +1,47 @@
-// App.js
+import React, { useState } from 'react'; // Импортируем React и хук useState для управления состоянием
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Импортируем компоненты маршрутизации из react-router-dom
+import Map from './components/Map'; // Импортируем компонент Map из папки components
+import Kategory from './components/Kategory'; // Импортируем компонент Kategory из папки components
 
-import React, { useState } from 'react';
-import Map from './components/Map';
-import Kategory from './components/Kategory'; // Импорт компонента Kategory
-import Footer from './components/Footer';
-import Sidebar from './components/Sidebar'; // Импорт компонента Sidebar
+import Graph from './components/Graph'; // Импортируем компонент Graph из папки components
 
+// Основной компонент приложения
 const App = () => {
-  const [dataUrl, setDataUrl] = useState(null); // Состояние для хранения dataUrl
-  const [sidebarOpen, setSidebarOpen] = useState(false); // Состояние для управления видимостью бокового меню
+  // Хук useState для управления состоянием dataUrl
+  const [dataUrl, setDataUrl] = useState(null); // Изначально dataUrl равно null
 
-  // Функция для обработки клика в компоненте Map
+
+  // Функция для обработки кликов на компоненте Map
   const handleMapClick = (pageId) => {
-    setDataUrl(pageId); // Устанавливаем dataUrl в состояние
+    setDataUrl(pageId); // Обновляем состояние dataUrl с помощью переданного pageId
   };
 
-  // Функция для переключения видимости бокового меню
-  const toggleSidebar = (open) => {
-    setSidebarOpen(open);
-  };
+
 
   return (
-    <div>
-      {/* Вставляем компонент Sidebar */}
-      <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
+    <Router> {/* Оборачиваем приложение в Router для поддержки маршрутизации */}
+      <div>
+   
+        {/* Основное содержимое приложения, рендерится в зависимости от текущего маршрута */}
+        <Routes>
+          {/* Основной маршрут (путь "/") отображает компонент Map */}
+          <Route path="/" element={<Map onClick={handleMapClick} />} />
 
-      {/* Рендерим Map или Kategory в зависимости от значения dataUrl */}
-      {dataUrl === null ? (
-        <Map onClick={handleMapClick} /> // Передаем функцию handleMapClick в Map
-      ) : (
-        <Kategory initialDataUrl={`/backend/${dataUrl}`} /> // Передаем dataUrl в Kategory через initialDataUrl
-      )}
+          {/* Маршрут "/kategory" отображает компонент Kategory с начальным dataUrl
+          <Route path="/kategory" element={<Kategory initialDataUrl={`/backend/${dataUrl}`} />} /> */}
 
-    </div>
+          {/* Маршрут "/graph" отображает компонент Graph */}
+          <Route path="/graph" element={<Graph />} />
+
+          {/* Дополнительные маршруты могут быть добавлены здесь по необходимости */}
+          {/* <Route path="/some-other-route" element={<SomeOtherComponent />} /> */}
+        </Routes>
+
+
+      </div>
+    </Router>
   );
 };
 
+// Экспортируем компонент App для использования в других частях приложения
 export default App;

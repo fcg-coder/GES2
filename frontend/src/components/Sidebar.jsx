@@ -1,5 +1,6 @@
 // Sidebar.js
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom'; // Импортируем Link для внутренней навигации
 import {
   SidebarContainer,
   MenuButton,
@@ -40,8 +41,8 @@ const Sidebar = ({ open, toggleSidebar }) => {
     <>
       {/* Контейнер для кнопок (ссылок и кнопки меню) */}
       <ButtonContainer>
-        <LinkButton href="/backend/about/">About Us</LinkButton>
-        <LinkButton href="/webgl/">VR</LinkButton>
+        <LinkButton to="/backend/about/">About Us</LinkButton>
+        <LinkButton to="/webgl/">VR</LinkButton>
         <MenuButton visible={buttonVisible} onClick={() => toggleSidebar(true)}>
           MENU
         </MenuButton>
@@ -60,21 +61,21 @@ const Sidebar = ({ open, toggleSidebar }) => {
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
           <ul>
             <h2>FILTER</h2>
-            <li><a href="/backend/about/">About us</a></li>
-            <li><a href="/backend/create/">Create new page</a></li>
-            <li><a href="/backend/feedback/">Feedback</a></li>
-            <li><a href="/webgl/">Unity</a></li>
-            <li><a href="/backend/donation/">Donation</a></li>
-            <li><a href="/backend/about/">About us</a></li>
+            <li><Link to="/about/">About us</Link></li>
+            <li><Link to="/create/">Create new page</Link></li>
+            <li><Link to="/feedback/">Feedback</Link></li>
+            <li><Link to="/webgl/">Unity</Link></li>
+            <li><Link to="/donation/">Donation</Link></li>
+            <li><Link to="/about/">About us</Link></li>
             <h2>Options</h2>
-            <li><a href="/backend/create/">dark mode</a></li>
+            <li><Link to="/create/">dark mode</Link></li>
           </ul>
           <ul>
             <h2>Index</h2>
-            <li><a href="/backend/graph/">Graph</a></li>
-            <li><a href="/backend/diagram/">Diagram</a></li>
-            <li><a href="/backend/graph/">Graph</a></li>
-            <li><a href="/backend/diagram/">Diagram</a></li>
+            <li><Link to="/graph">Graph</Link></li> {/* Замена ссылки на компонент Link */}
+            <li><Link to="/diagram/">Diagram</Link></li>
+            <li><Link to="/graph">Graph</Link></li> {/* Замена ссылки на компонент Link */}
+            <li><Link to="/diagram/">Diagram</Link></li>
           </ul>
         </div>
       </SidebarContainer>
