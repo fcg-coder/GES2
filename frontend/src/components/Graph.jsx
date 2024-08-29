@@ -1,29 +1,31 @@
-// src/Graph.jsx
-
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DataSet, Network } from 'vis-network/standalone';
 import 'vis-network/styles/vis-network.css'; // Импорт стилей
 
 const Graph = () => {
     const containerRef = useRef(null);
     const networkRef = useRef(null);
-
-    // Пример данных для узлов и рёбер
-    const nodesData = [
-        { id: 1, label: 'Node 1', shape: 'box', widthConstraint: { maximum: 200 } },
-        { id: 2, label: 'Node 2', shape: 'box', widthConstraint: { maximum: 200 } },
-        // Добавьте другие узлы по мере необходимости
-    ];
-
-    const edgesData = [
-        { from: 1, to: 2 },
-        // Добавьте другие рёбра по мере необходимости
-    ];
+    const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
 
     useEffect(() => {
-        if (containerRef.current) {
-            const nodes = new DataSet(nodesData);
-            const edges = new DataSet(edgesData);
+        // Функция для загрузки данных с сервера
+        const fetchData = async () => {
+            try {
+                const response = await fetch('/backend/graph/');
+                const data = await response.json();
+                setGraphData(data);
+            } catch (error) {
+                console.error('Error fetching graph data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (containerRef.current && graphData.nodes.length > 0) {
+            const nodes = new DataSet(graphData.nodes);
+            const edges = new DataSet(graphData.edges);
             const data = { nodes, edges };
 
             const options = {
@@ -67,7 +69,7 @@ const Graph = () => {
                 }
             });
         }
-    }, [nodesData, edgesData]);
+    }, [graphData]);
 
     return (
         <div style={{ height: '100vh', backgroundColor: 'white', fontSize: '12px', fontFamily: 'Josefin Sans, sans-serif' }}>

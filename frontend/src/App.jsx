@@ -1,7 +1,7 @@
 import React, { useState } from 'react'; // Импортируем React и хук useState для управления состоянием
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Импортируем компоненты маршрутизации из react-router-dom
 import Map from './components/Map'; // Импортируем компонент Map из папки components
-import Kategory from './components/Kategory'; // Импортируем компонент Kategory из папки components
+
 
 import Graph from './components/Graph'; // Импортируем компонент Graph из папки components
 
@@ -25,10 +25,7 @@ const App = () => {
         {/* Основное содержимое приложения, рендерится в зависимости от текущего маршрута */}
         <Routes>
           {/* Основной маршрут (путь "/") отображает компонент Map */}
-          <Route path="/" element={<Map onClick={handleMapClick} />} />
-
-          {/* Маршрут "/kategory" отображает компонент Kategory с начальным dataUrl
-          <Route path="/kategory" element={<Kategory initialDataUrl={`/backend/${dataUrl}`} />} /> */}
+          <Route path="/" element={<Map />} />
 
           {/* Маршрут "/graph" отображает компонент Graph */}
           <Route path="/graph" element={<Graph />} />

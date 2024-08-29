@@ -42,7 +42,7 @@ const Sidebar = ({ open, toggleSidebar }) => {
       {/* Контейнер для кнопок (ссылок и кнопки меню) */}
       <ButtonContainer>
         <LinkButton to="/backend/about/">About Us</LinkButton>
-        <LinkButton to="/webgl/">VR</LinkButton>
+        <LinkButton> <a href='/webgl/'> VR </a> </LinkButton>
         <MenuButton visible={buttonVisible} onClick={() => toggleSidebar(true)}>
           MENU
         </MenuButton>
@@ -64,7 +64,7 @@ const Sidebar = ({ open, toggleSidebar }) => {
             <li><Link to="/about/">About us</Link></li>
             <li><Link to="/create/">Create new page</Link></li>
             <li><Link to="/feedback/">Feedback</Link></li>
-            <li><Link to="/webgl/">Unity</Link></li>
+            <li><a href='/webgl/'> Unity </a> </li>
             <li><Link to="/donation/">Donation</Link></li>
             <li><Link to="/about/">About us</Link></li>
             <h2>Options</h2>

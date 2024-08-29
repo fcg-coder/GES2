@@ -9,6 +9,7 @@ import plotly.graph_objects as go
 from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.serializers.json import DjangoJSONEncoder
 
 
 import networkx as nx
@@ -148,24 +149,29 @@ def createNewPage(request):
 def graph(request):
     G = nx.Graph()
     categorys = MAP.objects.all()
+    
     # Добавление узлов и связей в граф
     for category in categorys:
-        G.add_node(category.id, name=category.nameOfPage)  # Добавляем узел с атрибутом name
+        G.add_node(category.id, name=category.nameOfPage)
         
         if category.FlagForInternalRecordings == 1:
             for podcategory in category.internal_pages.all():
-
-                G.add_node(podcategory.id, name=podcategory.nameOfPage)  # Добавляем связанный узел
+                G.add_node(podcategory.id, name=podcategory.nameOfPage)
                 G.add_edge(category.id, podcategory.id)
             
         if category.FlagForInternalRecordings == 0:
-            objs = page.objects.filter(map = category)
+            objs = page.objects.filter(map=category)
             for obj in objs:
-                G.add_node(obj.id, name=obj.nameOfPage)  # Добавляем связанный узел
+                G.add_node(obj.id, name=obj.nameOfPage)
                 G.add_edge(category.id, obj.id)
-            
-    return render(request, 'graph.html', {'G': G })
- 
+    
+    # Подготовка данных для фронтенда
+    nodes = [{'id': node, 'label': data['name']} for node, data in G.nodes(data=True)]
+    edges = [{'from': u, 'to': v} for u, v in G.edges()]
+    
+    # Отправка данных в формате JSON
+    return JsonResponse({'nodes': nodes, 'edges': edges}, encoder=DjangoJSONEncoder)
+
 
 def euler_diagram_view(request):
     # Получите данные из моделей MAP и Page и обработайте их
