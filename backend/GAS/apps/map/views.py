@@ -4,17 +4,13 @@ from django.http import Http404, HttpResponseRedirect
 from requests import post
 from map.models import MAP
 from PAGE.models import page
-from coments.models import Comment
-import plotly.graph_objects as go
+from PAGE.models import Comment
 from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
 
 
-import networkx as nx
-from django.apps import apps
-import pickle
 
 from .models import countOfVirW 
 
@@ -125,97 +121,6 @@ def next_page(request, idToNewPage):
     return JsonResponse(data)
 
 
-def createNewPage(request):
-    category =  MAP.objects.filter(FlagForInternalRecordings=0).values('id', 'nameOfPage')
-    all_pages = page.objects.all()
-
-    
-    
-    all_text_tags = set()
-    all_graphical_tags = set()
-
-    for page_obj in all_pages:
-        all_text_tags.update(page_obj.TEXT_BASED_MMO_CHOICES)
-        all_graphical_tags.update(page_obj.GRAPHICAL_MMO_CHOICES)
-
-    return render(request, 'createNewPage.html',{'category' : category  , 'all_text_tags': all_text_tags,
-        'all_graphical_tags': all_graphical_tags,} )
-
-
-    
 
 
 
-def graph(request):
-    G = nx.Graph()
-    categorys = MAP.objects.all()
-    
-    # Добавление узлов и связей в граф
-    for category in categorys:
-        G.add_node(category.id, name=category.nameOfPage)
-        
-        if category.FlagForInternalRecordings == 1:
-            for podcategory in category.internal_pages.all():
-                G.add_node(podcategory.id, name=podcategory.nameOfPage)
-                G.add_edge(category.id, podcategory.id)
-            
-        if category.FlagForInternalRecordings == 0:
-            objs = page.objects.filter(map=category)
-            for obj in objs:
-                G.add_node(obj.id, name=obj.nameOfPage)
-                G.add_edge(category.id, obj.id)
-    
-    # Подготовка данных для фронтенда
-    nodes = [{'id': node, 'label': data['name']} for node, data in G.nodes(data=True)]
-    edges = [{'from': u, 'to': v} for u, v in G.edges()]
-    
-    # Отправка данных в формате JSON
-    return JsonResponse({'nodes': nodes, 'edges': edges}, encoder=DjangoJSONEncoder)
-
-
-def euler_diagram_view(request):
-    # Получите данные из моделей MAP и Page и обработайте их
-    map_data = MAP.objects.all()
-    page_data = page.objects.all()
-
-    # Создайте список меток и соответствующих родительских меток для модели MAP
-    map_labels = [entry.nameOfPage for entry in map_data]
-    map_parents = ['' if entry.FlagForThePresenceOfAParent == 0 else MAP.objects.get(internal_pages=entry).nameOfPage for entry in map_data]
-
-    # Создайте список меток и соответствующих родительских меток для модели Page
-    page_labels = [entry.nameOfPage for entry in page_data]
-    page_parents = [entry.map.nameOfPage for entry in page_data]
-
-    # Объедините списки меток и родительских меток
-    labels = map_labels + page_labels
-    parents = map_parents + page_parents
-
-    parents[0] = 'ALL'
-    parents[1] = 'ALL'
-
-
-
-    values = [1 for _ in labels]  # Значения могут быть любыми, важен только их относительный размер
-
-    # Создайте диаграмму Эйлера-Венна с помощью Plotly Treemap
-    fig = go.Figure(go.Treemap(
-        labels=labels,
-        parents=parents,
-        values=values,
-        textinfo='label+value+percent entry',
-        hoverinfo='all',
-        marker=dict(
-            colors=['blue', 'red', 'green', 'yellow']  # Укажите цвета для каждой метки
-        )
-    ))
-
-    # Настройте внешний вид диаграммы
-    fig.update_layout(
-        title='Диаграмма Эйлера-Венна',
-    )
-
-    # Сохраните диаграмму в виде HTML-файла или отобразите ее на странице
-    fig.write_html('GAS/templates/euler_diagram.html')
-
-    # Верните сгенерированную диаграмму в виде ответа от представления
-    return render(request, 'euler_diagram.html')
