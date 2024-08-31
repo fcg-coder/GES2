@@ -164,6 +164,7 @@ const Map = () => {
     const handleClick = (event) => {
         const target = event.target;
         const dataUrl = target.getAttribute('data-url');
+        console.log(dataUrl);
         if (dataUrl) {
             setShowFullScreen(true);
         }
@@ -189,6 +190,7 @@ const Map = () => {
                         beforeInjection={(svg) => {
                             Array.from(svg.querySelectorAll('path')).forEach((path) => {
                                 if (path.getAttribute('class') === 'cls-8') {
+                               
                                     path.addEventListener('mouseenter', handleMouseEnter);
                                     path.addEventListener('mouseleave', handleMouseLeave);
                                     path.addEventListener('click', handleClick);

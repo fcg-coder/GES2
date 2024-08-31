@@ -90,14 +90,15 @@ WSGI_APPLICATION = 'GAS.wsgi.application'
 #     }
 # }
 
-DATABASES= {
-        'archive': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'HOST': os.environ.get('DB_HOST'),
-                'NAME': os.environ.get('DB_NAME'),
-                'USER': os.environ.get('DB_USER'),
-                'PASSWORD': os.environ.get('DB_PASS'),
-            },
+DATABASES = {
+    'archive': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('DB_HOST', 'database'),
+        'NAME': os.environ.get('DB_NAME', 'database'),
+        'USER': os.environ.get('DB_USER', 'user'),
+        'PASSWORD': os.environ.get('DB_PASS', 'pass'),
+        'PORT': '5432',
+        },
         'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': BASE_DIR / 'db.sqlite3',

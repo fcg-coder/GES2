@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-
   nginx:
     container_name: nginx
     image: nginx
@@ -19,9 +18,9 @@ services:
     container_name: database
     image: postgres:14.6-alpine
     environment:
-      - POSTGRES_DB=database
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
+      POSTGRES_DB: database
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: always
@@ -39,10 +38,10 @@ services:
     volumes:
       - ./backend:/backend
     environment:
-      - DB_HOST=database
-      - DB_NAME=database
-      - DB_USER=user
-      - DB_PASS=pass
+      DB_HOST: database
+      DB_NAME: database
+      DB_USER: user
+      DB_PASS: pass
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - database
