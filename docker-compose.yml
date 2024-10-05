@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-
   nginx:
     container_name: nginx
     image: nginx
@@ -10,11 +9,22 @@ services:
       dockerfile: Dockerfile.nginx
     ports:
       - 8080:80
-    # depends_on:
-    #   - frontend
+    depends_on:
+      - frontend
+      - webgl
     restart: always
 
-    
+  # database:
+  #   container_name: database
+  #   image: postgres:14.6-alpine
+  #   environment:
+  #     POSTGRES_DB: database
+  #     POSTGRES_USER: user
+  #     POSTGRES_PASSWORD: pass
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   restart: always
+
   backend:
     container_name: backend
     build: 
@@ -27,37 +37,35 @@ services:
       - 8000:8000
     volumes:
       - ./backend:/backend
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      - DB_HOST=database
-      - DB_NAME=database
-      - DB_USER=user
-      - DB_PASS=pass
-
-    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    
+    # environment:
+      # DB_HOST: database
+      # DB_NAME: database
+      # DB_USER: user
+      # DB_PASS: pass
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     # depends_on:
     #   - database
+    # restart: always
 
   frontend:
-      container_name: frontend
-      build: 
-        context: .
-        dockerfile: Dockerfile.frontend
-      expose:
-        - 3000
-      # depends_on:
-      #   - backend
+    container_name: frontend
+    build: 
+      context: .
+      dockerfile: Dockerfile.frontend
+    depends_on:
+      - backend
+    restart: always
 
-  database:
-    container_name: database
-    image: postgres:14.6-alpine
-    environment:
-      - POSTGRES_DB=database
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+  webgl:
+    container_name: webgl
+    image: webgl
+    build: 
+      context: .
+      dockerfile: Dockerfile.webgl
+    expose:
+      - 8001
+    depends_on:
+      - frontend
 
 volumes:
   postgres_data: {}
