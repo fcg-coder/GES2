@@ -1,26 +1,44 @@
-import React, { useState } from 'react';
-import Map from './components/Map';
-import Kategory from './components/Kategory'; // Импорт компонента Kategory
-import Footer from './components/Footer';
+import React, { useState } from 'react'; // Импортируем React и хук useState для управления состоянием
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Импортируем компоненты маршрутизации из react-router-dom
+import Map from './components/Map'; // Импортируем компонент Map из папки components
 
+
+import Graph from './components/Graph'; // Импортируем компонент Graph из папки components
+
+// Основной компонент приложения
 const App = () => {
-  const [dataUrl, setDataUrl] = useState(null); // Состояние для хранения dataUrl
+  // Хук useState для управления состоянием dataUrl
+  const [dataUrl, setDataUrl] = useState(null); // Изначально dataUrl равно null
 
-  // Функция для обработки клика в компоненте Map
+
+  // Функция для обработки кликов на компоненте Map
   const handleMapClick = (pageId) => {
-    setDataUrl(pageId); // Устанавливаем dataUrl в состояние
+    setDataUrl(pageId); // Обновляем состояние dataUrl с помощью переданного pageId
   };
 
+
+
   return (
-    <div>
-      {/* Рендерим Map или Kategory в зависимости от значения dataUrl */}
-      {dataUrl === null ? (
-        <Map onClick={handleMapClick} /> // Передаем функцию handleMapClick в Map
-      ) : (
-        <Kategory initialDataUrl={`/backend/${dataUrl}`} /> // Передаем dataUrl в Kategory через initialDataUrl
-      )}
-      <Footer />
-    </div>
+    <Router> {/* Оборачиваем приложение в Router для поддержки маршрутизации */}
+      <div>
+   
+        {/* Основное содержимое приложения, рендерится в зависимости от текущего маршрута */}
+        <Routes>
+          {/* Основной маршрут (путь "/") отображает компонент Map */}
+          <Route path="/" element={<Map />} />
+
+          {/* Маршрут "/graph" отображает компонент Graph */}
+          <Route path="/graph" element={<Graph />} />
+
+          {/* Дополнительные маршруты могут быть добавлены здесь по необходимости */}
+          {/* <Route path="/some-other-route" element={<SomeOtherComponent />} /> */}
+        </Routes>
+
+
+      </div>
+    </Router>
   );
 };
+
+// Экспортируем компонент App для использования в других частях приложения
 export default App;

@@ -12,5 +12,5 @@ urlpatterns = [
    path('pagelist<int:idOfPage>/', views.index, name='index'),
    path('page<int:idOfPage>/', views.openPage, name='openPage'),
    path('newPAge<int:idOfPage>/', views.newPage, name='newPage'),
-
+   path('leave_comment/<int:idOfPage>/', views.leave_comment, name='leave_comment'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
