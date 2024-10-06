@@ -143,7 +143,7 @@ const YourComponent = ({ initialDataUrl }) => {
     );
 };
 
-const Kategory = ({ onClose }) => (
+const Category = ({ onClose }) => (
     <YourComponent initialDataUrl={'http://localhost:3000/data1.json'} />
 );
 
@@ -211,7 +211,7 @@ const Map = () => {
           `}</style>
                 </MapContainer>
             ) : (
-                <Kategory onClose={handleFullScreenClose} />
+                <Category onClose={handleFullScreenClose} />
             )}
         </ThemeProvider>
     );

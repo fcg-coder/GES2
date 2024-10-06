@@ -121,3 +121,10 @@ http://localhost:8080
     - https://github.com/fcg-coder
 * Идейная часть:
     - https://lshfn.ru/
+
+
+
+
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+docker exec -it ollama ollama run llama3:8b
+https://habr.com/ru/articles/825678/
