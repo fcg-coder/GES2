@@ -3,3 +3,5 @@ config
 package-lock.json
 package.json
 .DC_Store
+.venv
+.vscode
