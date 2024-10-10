@@ -30,6 +30,4 @@ jobs:
     - name: Run docker-compose
       run: |
          ssh root@89.19.216.56 "
-           docker-compose down && docker-compose up --build -d
-
-        "
+           docker-compose down && docker-compose up --build -d"
