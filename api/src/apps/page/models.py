@@ -37,7 +37,7 @@ class Page(models.Model):
     reviewStatus = models.CharField('Статус', max_length=20, choices=STATUS_CHOICES, blank=True)
     tagTextBasedMMOs = models.CharField('ТЭГ text_based_MMOs', max_length=20, choices=TEXT_BASED_MMO_CHOICES, blank=True)
     tagGraphicalMMOs = models.CharField('ТЭГ graphical_MMOs', max_length=20, choices=GRAPHICAL_MMO_CHOICES, blank=True)
-    parentCoategoryKey = models.ForeignKey(Category, verbose_name='Родительская категория', on_delete=models.CASCADE)
+    parentCategoryKey = models.ForeignKey(Category, verbose_name='Родительская категория', on_delete=models.CASCADE)
    
     def __str__(self):
         return self.nameOfPage

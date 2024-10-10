@@ -158,3 +158,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'stasyanrus610@gmail.com'
 EMAIL_HOST_PASSWORD = ''
+
+TEST_DISCOVERY_ROOT = 'src/apps'

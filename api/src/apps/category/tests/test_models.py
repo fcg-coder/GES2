@@ -4,13 +4,13 @@ from category.models import Category  # Импортируем модель Cate
 class CategoryModelTest(TestCase):  # Определяем класс тестов для модели Category
     def setUp(self):  # Метод, который выполняется перед каждым тестом
         # Создаём несколько категорий для тестов
-        self.parent_category = Category.objects.create(nameOfCatergory='Родительская категория')  # Создаём родительскую категорию
-        self.child_category = Category.objects.create(nameOfCatergory='Дочерняя категория')  # Создаём дочернюю категорию
+        self.parent_category = Category.objects.create(nameOfCategory='Родительская категория')  # Создаём родительскую категорию
+        self.child_category = Category.objects.create(nameOfCategory='Дочерняя категория')  # Создаём дочернюю категорию
 
     def test_category_creation(self):  # Тест для проверки создания категории
         """Проверка, что категория создается и сохраняется корректно"""  # Описание теста
-        category = Category.objects.create(nameOfCatergory='Тестовая категория', countOfNestedWorld=3)  # Создаём тестовую категорию
-        self.assertEqual(category.nameOfCatergory, 'Тестовая категория')  # Проверяем, что имя категории совпадает
+        category = Category.objects.create(nameOfCategory='Тестовая категория', countOfNestedWorld=3)  # Создаём тестовую категорию
+        self.assertEqual(category.nameOfCategory, 'Тестовая категория')  # Проверяем, что имя категории совпадает
         self.assertEqual(category.countOfNestedWorld, 3)  # Проверяем, что значение countOfNestedWorld равно 3
         self.assertFalse(category.flagForInternalRecordings)  # Проверяем, что флаг для внутренних записей равен False
         self.assertFalse(category.flagForThePresenceOfAParent)  # Проверяем, что флаг наличия родительской категории равен False

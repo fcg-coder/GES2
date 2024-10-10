@@ -2,8 +2,8 @@ from django.contrib import admin
 from .models import Page, Comment
 
 class PageAdmin(admin.ModelAdmin):
-    list_display = ('nameOfPage', 'reviewStatus', 'tagTextBasedMMOs', 'tagGraphicalMMOs', 'parentCoategoryKey')
-    list_filter = ('reviewStatus', 'tagTextBasedMMOs', 'tagGraphicalMMOs', 'parentCoategoryKey')
+    list_display = ('nameOfPage', 'reviewStatus', 'tagTextBasedMMOs', 'tagGraphicalMMOs', 'parentCategoryKey')
+    list_filter = ('reviewStatus', 'tagTextBasedMMOs', 'tagGraphicalMMOs', 'parentCategoryKey')
     search_fields = ('nameOfPage', 'tagTextBasedMMOs', 'tagGraphicalMMOs')
     ordering = ('nameOfPage',)
 

@@ -25,7 +25,7 @@ def index(reuest):
             category.save()
 
         # Собираем все в JSON и возвращаем во фронт
-        categoriesData = [{"id": category.id, "nameOfCatergory": category.nameOfCatergory, "size": category.size} for category in categories]  # Исправлено: `catergory` на `category`
+        categoriesData = [{"id": category.id, "nameOfCategory": category.nameOfCategory, "size": category.size} for category in categories]  # Исправлено: `catergory` на `category`
         return JsonResponse({"categories": categoriesData})
 
     except Exception as e:

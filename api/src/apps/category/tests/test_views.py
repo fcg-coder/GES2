@@ -7,12 +7,12 @@ class CategoryViewTests(TestCase):  # Определяем класс тесто
         self.client = Client()  # Создаем клиент для тестирования запросов
         # Создаем тестовые категории для использования в тестах
         self.category1 = Category.objects.create(
-            nameOfCatergory="Category 1",  # Имя первой категории
+            nameOfCategory="Category 1",  # Имя первой категории
             countOfNestedWorld=5,  # Количество миров для первой категории
             flagForThePresenceOfAParent=False  # Флаг для родительской категории
         )
         self.category2 = Category.objects.create(
-            nameOfCatergory="Category 2",  # Имя второй категории
+            nameOfCategory="Category 2",  # Имя второй категории
             countOfNestedWorld=10,  # Количество миров для второй категории
             flagForThePresenceOfAParent=False  # Флаг для родительской категории
         )
@@ -27,8 +27,8 @@ class CategoryViewTests(TestCase):  # Определяем класс тесто
         self.assertEqual(len(data["categories"]), 2)  # Ожидаем 2 категории
 
         # Проверяем данные для каждой категории
-        self.assertEqual(data["categories"][0]["nameOfCatergory"], "Category 1")  # Проверяем имя первой категории
-        self.assertEqual(data["categories"][1]["nameOfCatergory"], "Category 2")  # Проверяем имя второй категории
+        self.assertEqual(data["categories"][0]["nameOfCategory"], "Category 1")  # Проверяем имя первой категории
+        self.assertEqual(data["categories"][1]["nameOfCategory"], "Category 2")  # Проверяем имя второй категории
         
         # Здесь можно добавить проверку других атрибутов, если необходимо
         

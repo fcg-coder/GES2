@@ -2,10 +2,10 @@ from django.contrib import admin
 from .models import Category
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('nameOfCatergory', 'countOfNestedWorld', 'parentPage', 'flagForInternalRecordings', 'flagForThePresenceOfAParent')
+    list_display = ('nameOfCategory', 'countOfNestedWorld', 'parentPage', 'flagForInternalRecordings', 'flagForThePresenceOfAParent')
     list_filter = ('flagForInternalRecordings', 'flagForThePresenceOfAParent', 'parentPage')  # Фильтры для боковой панели
-    search_fields = ('nameOfCatergory',)  # Поля для поиска
-    ordering = ('nameOfCatergory',)  # Упорядочивание по имени категории
+    search_fields = ('nameOfCategory',)  # Поля для поиска
+    ordering = ('nameOfCategory',)  # Упорядочивание по имени категории
 
     def save_model(self, request, obj, form, change):
         # Дополнительные действия при сохранении модели (если нужно)

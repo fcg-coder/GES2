@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('api/', include('category.urls')),
+    path('api/page/', include('page.urls')), 
     path('api/service/', include('service.urls')),
     path('api/admin/', admin.site.urls),
     path('api/flatpages/', include('django.contrib.flatpages.urls')),
