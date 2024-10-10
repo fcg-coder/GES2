@@ -9,7 +9,7 @@ from django.core.mail import EmailMessage
 from django.http import HttpResponseRedirect
 
 # Импорт модели feedback из текущего приложения
-from .models import feedback
+from .models import Feedback
 
 # Импорт модели Category из приложения category
 from category.models import Category

@@ -7,21 +7,28 @@ from django.views.decorators.csrf import csrf_exempt
 # Пропсать логику для конечной категории 
 #  if flagForIncludedCategorys == 0 :
 #  Вернуть список СТРАНИЦ Page модели 
-def index(request):
+
+
+def index(reuest):
     try:
         categories = Category.objects.filter(flagForThePresenceOfAParent=0)
-
+        
+        # Если нет нужных категорий, возвращаем пустой JSON
+        if not categories.exists():
+            return JsonResponse({"categories": []})
+        
         # Находим относительный размер категории для хорошего отображения
-        allSize = sum(category.countOfVW for category in categories)
+        allSize = sum(category.countOfNestedWorld for category in categories)
 
         for category in categories:
-            category.size = category.countOfVW / allSize if allSize > 0 else 0  # Проверка на деление на ноль
+            category.size = category.countOfNestedWorld / allSize if allSize > 0 else 0  # Проверка на деление на ноль
             category.save()
 
         # Собираем все в JSON и возвращаем во фронт
-        categoriesData = [{"id": category.id, "nameOfCategory": category.nameOfCategory, "size": category.size} for category in categories]  # Исправлено: `catergory` на `category`
+        categoriesData = [{"id": category.id, "nameOfCatergory": category.nameOfCatergory, "size": category.size} for category in categories]  # Исправлено: `catergory` на `category`
         return JsonResponse({"categories": categoriesData})
 
     except Exception as e:
+        print("Error:", str(e))  # Вывод ошибки
         return JsonResponse({"error": str(e)}, status=500)
 

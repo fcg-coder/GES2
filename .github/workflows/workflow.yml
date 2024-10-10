@@ -1,12 +1,34 @@
-name: Deploy to Server
+name: Django CI/CD Pipeline
 
 on:
   push:
     branches:
-      - master  # Запускать пайплайн при пуше в ветку master
+      - '**'  # Запускать на все ветки
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run Django tests
+      run: |
+        python manage.py test category
+
   deploy:
+    if: github.ref == 'refs/heads/master'  # Деплой только при пуше в ветку master
     runs-on: ubuntu-latest
 
     steps:
@@ -14,7 +36,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Set up SSH agent
-      uses:  webfactory/ssh-agent@v0.9.0
+      uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
@@ -25,9 +47,11 @@ jobs:
 
     - name: Copy files via SCP
       run: |
-        scp -r ./* root@89.19.216.56:
+        scp -r ./* root@89.19.216.56:/
 
     - name: Run docker-compose
       run: |
-         ssh root@89.19.216.56 "
-           docker-compose down && docker-compose up --build -d"
+        ssh root@89.19.216.56 "
+          cd / &&
+          docker-compose down &&
+          docker-compose up --build -d"
