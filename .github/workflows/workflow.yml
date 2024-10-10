@@ -25,6 +25,7 @@ jobs:
 
     - name: Run Django tests
       run: |
+        cd api
         python manage.py test category
 
   deploy:
