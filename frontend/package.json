@@ -4,19 +4,19 @@
   "private": true,
   "proxy": "http://localhost:8000",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.7.2",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
+    "axios": "^1.7.7",
     "handy-svg": "^1.0.8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.24.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0",
     "react-scripts": "^5.0.1",
     "react-svg": "^16.1.34",
-    "styled-components": "^6.1.11",
+    "styled-components": "^6.1.13",
     "vis-network": "^9.1.9",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^4.2.3"
   },
   "scripts": {
     "start": "react-scripts start",

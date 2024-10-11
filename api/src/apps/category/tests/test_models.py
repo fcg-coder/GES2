@@ -25,6 +25,7 @@ from page.models import Page
 # Проверяет рекурсивное обновление миров на всех уровнях категорий. 
 # 
 class CategoryModelTest(TestCase):  # Определяем класс тестов для модели Category
+
     def setUp(self):
         self.parent_category = Category.objects.create(nameOfCategory='Родительская категория', flagForThePresenceOfAParent=False)
         self.child_category = Category.objects.create(nameOfCategory='Дочерняя категория', parentCategory=self.parent_category, flagForThePresenceOfAParent=True)
@@ -40,13 +41,12 @@ class CategoryModelTest(TestCase):  # Определяем класс тесто
 
     def test_link_child(self):  # Тест для проверки связывания дочерней категории с родительской
         """Проверка, что дочерняя категория корректно связывается с родительской"""  # Описание теста
-        self.parent_category.link_child(self.child_category)  # Связываем дочернюю категорию с родительской
         
         # Проверяем, что у дочерней категории установлен родитель
         self.assertEqual(self.child_category.parentCategory, self.parent_category)  # Проверяем, что parentCategory дочерней категории совпадает с родительской
 
-        # Проверяем, что у родителя добавлена дочерняя категория в internalPages
-        self.assertIn(self.child_category, self.parent_category.internalPages.all())  # Проверяем, что дочерняя категория есть в internalPages родителя
+        # Проверяем, что у родителя добавлена дочерняя категория в childCategoies
+        self.assertIn(self.child_category, self.parent_category.childCategoies.all())  # Проверяем, что дочерняя категория есть в childCategoies родителя
 
         # Проверяем, что флаг наличия подкатегорий обновился
         self.assertTrue(self.parent_category.flagForInternalRecordings)  # Проверяем, что флаг для внутренних записей родительской категории установлен в True
@@ -62,10 +62,9 @@ class CategoryModelTest(TestCase):  # Определяем класс тесто
     def test_signal_post_save_updates_internal_recordings(self):  # Тест для проверки обновления флага наличия внутренних записей
         """Проверка, что сигнал post_save обновляет флаг наличия внутренних записей"""  # Описание теста
         # Добавляем дочернюю категорию вручную
-        self.parent_category.internalPages.add(self.child_category)  # Добавляем дочернюю категорию в internalPages родительской категории
-        self.parent_category.link_child(self.child_category)  # Вызываем метод связывания дочерней категории с родительской
-
-        # Проверяем, что сигнал обновил флаг наличия внутренних записей
+        self.parent_category.childCategoies.add(self.child_category)  # Добавляем дочернюю категорию в childCategoies родительской категории
+    
+          # Проверяем, что сигнал обновил флаг наличия внутренних записей
         updated_parent_category = Category.objects.get(id=self.parent_category.id)  # Получаем обновлённый объект родительской категории из базы данных
         self.assertTrue(updated_parent_category.flagForInternalRecordings)  # Проверяем, что флаг для внутренних записей установлен в True
 

@@ -18,7 +18,7 @@ class Category(models.Model):  # Определяем модель Category, к�
             on_delete=models.CASCADE, 
             related_name='subcategories'  # Добавлено для получения подкатегорий
         )
-    internalPages = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='related_pages')  # Поле для хранения многих внутренних страниц (дочерних категорий)
+    childCategoies = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='related_pages')  # Поле для хранения многих внутренних страниц (дочерних категорий)
 
     flagForInternalRecordings = models.BooleanField('Есть подкатегории', default=False)  # Флаг, указывающий, есть ли подкатегории
     flagForThePresenceOfAParent = models.BooleanField('Есть родительская категория', default=False)  # Флаг, указывающий, есть ли родительская категория
@@ -30,39 +30,37 @@ class Category(models.Model):  # Определяем модель Category, к�
         verbose_name = 'Категория'  # Человекочитаемое имя модели в единственном числе
         verbose_name_plural = 'Категории'  # Человекочитаемое имя модели во множественном числе
 
-    def get_parent_categories(self):  # Метод для получения родительских категорий
-        # Получаем родительские категории, в которые входит данная категория
-        return Category.objects.filter(internalPages=self)  # Возвращает все категории, которые имеют данную категорию как внутреннюю
 
-    #При сохранении категории будет одновлять фалги  
-    def save(self, *args, **kwargs):  # Переопределяем метод save для добавления логики при сохранении
-        # Исправляем флаг на правильный атрибут
-        self.flagForThePresenceOfAParent = self.parentCategory is not None  # Устанавливаем флаг наличия родительской категории
-        if self.parentCategory is not None:
-            self.parentCategory.flagForInternalRecordings = True
-            self.parentCategory.flagForInternalRecordings = True
+    def save(self, *args, update_parent=True, **kwargs):  # Переопределяем метод save с аргументом update_parent по умолчанию
+        if update_parent:
+            self.flagForThePresenceOfAParent = self.parentCategory is not None  # Устанавливаем флаг наличия родительской категории
 
-        if not getattr(self, '_skip_signal', False):  # Проверяем, установлен ли флаг для пропуска сигнала
-            self._skip_signal = True  # Устанавливаем флаг, чтобы избежать повторного вызова сигналов
-            super().save(*args, **kwargs)  # Вызываем метод save родительского класса
-            self._skip_signal = False  # Сбрасываем флаг
+           
+        if not getattr(self, '_skip_signal', False):
+            self._skip_signal = True
+            super().save(*args, **kwargs)
+            self._skip_signal = False
         else:
-            super().save(*args, **kwargs)  # Если флаг установлен, просто сохраняем без сигналов
+            super().save(*args, **kwargs)
+
+        if self.parentCategory is not None:
+            self.parentCategory.childCategoies.add(self)  # Добавляем дочернюю категорию в поле childCategoies родительской категории
+            self.parentCategory.flagForInternalRecordings = True
+            self.parentCategory.save(update_parent=False)  # Передаем False, чтобы предотвратить рекурсию
 
 
 
+
+    # Запускается при сохранении объекта Page 
+    # Рекурсивно обновляет всем родительским категориям количество миров
     def update_count_of_virtual_worlds(self):
-        # Если категория конечная (нет подкатегорий)
+    
         if not self.flagForInternalRecordings:
-            # Получаем модель Page через ленивый импорт
-            Page = apps.get_model('page', 'Page')  # 'page' - имя приложения, 'Page' - имя модели
-            # Считаем количество страниц для этой конечной категории
-            count_from_pages = Page.objects.filter(parentCategoryKey=self).count()
-            self.countOfNestedWorld = count_from_pages
+            Page = apps.get_model('page', 'Page') 
+            self.countOfNestedWorld = Page.objects.filter(parentCategoryKey=self).count()
         else:
             # Если категория имеет подкатегории, считаем количество миров для подкатегорий
-            count_from_subcategories = self.subcategories.aggregate(Sum('countOfNestedWorld'))['countOfNestedWorld__sum'] or 0
-            self.countOfNestedWorld = count_from_subcategories
+            self.countOfNestedWorld = self.subcategories.aggregate(Sum('countOfNestedWorld'))['countOfNestedWorld__sum'] or 0
 
         # Сохраняем изменения
         self.save(update_fields=['countOfNestedWorld'])
@@ -72,16 +70,3 @@ class Category(models.Model):  # Определяем модель Category, к�
             self.parentCategory.update_count_of_virtual_worlds()
 
    
-
-    def link_child(self, child):  # Метод для связывания дочерней категории с родительской
-        child.parentCategory = self  # Устанавливаем текущую категорию как родительскую для дочерней
-        child.save()  # Сохраняем дочернюю категорию
-
-        # Добавляем дочернюю категорию в список внутренних страниц родителя
-        self.internalPages.add(child)  # Добавляем дочернюю категорию в поле internalPages родительской категории
-
-        # Обновляем правильный флаг
-        self.flagForInternalRecordings = bool(self.internalPages.count())  # Устанавливаем флаг наличия подкатегорий на основе количества внутренних страниц
-        self.save()  # Сохраняем изменения в родительской категории
-
-

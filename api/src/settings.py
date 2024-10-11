@@ -83,26 +83,25 @@ WSGI_APPLICATION = 'src.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+
+import os
 
 DATABASES = {
-    'archive': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('DB_HOST', 'database'),
-        'NAME': os.environ.get('DB_NAME', 'database'),
-        'USER': os.environ.get('DB_USER', 'user'),
-        'PASSWORD': os.environ.get('DB_PASS', 'pass'),
-        'PORT': '5432',
-        },
-        'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
-            }
+    
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': os.environ.get('DB_NAME', 'postgres_db'),
+    #     'USER': os.environ.get('DB_USER', 'postgres_user'),
+    #     'PASSWORD': os.environ.get('DB_PASS', 'postgres_password'),
+    #     'HOST': os.environ.get('DB_HOST', 'postgres'),
+    #     'PORT': '5432',  # Порт, на котором слушает PostgreSQL в контейнере
+    # }
+
+    'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+            
 }
 
 # Password validation

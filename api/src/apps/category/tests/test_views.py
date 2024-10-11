@@ -5,6 +5,7 @@ from page.models import Page  # Импортируем модель Page
 import networkx as nx  # Импортируем библиотеку для работы с графами
 
 class CategoryViewTests(TestCase):  # Определяем класс тестов для представлений категории
+   
     def setUp(self):
         self.client = Client()  # Создаем клиент для тестирования запросов
         # Создаем тестовые категории для использования в тестах
@@ -51,6 +52,8 @@ class CategoryViewTests(TestCase):  # Определяем класс тесто
 """
 
 class GraphViewTests(TestCase):
+
+
     def setUp(self):
         self.client = Client()
 
@@ -66,7 +69,7 @@ class GraphViewTests(TestCase):
             countOfNestedWorld=0,
             flagForThePresenceOfAParent=True
         )
-        self.category1.internalPages.add(self.subcategory1)  # Связываем подкатегорию с категорией
+        self.category1.childCategoies.add(self.subcategory1)  # Связываем подкатегорию с категорией
 
         self.category2 = Category.objects.create(
             nameOfCategory="Category 2",

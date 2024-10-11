@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   nginx:
@@ -11,19 +11,47 @@ services:
       - 8080:80
     depends_on:
       - frontend
-      - webgl
+      # - webgl
     restart: always
 
-  # database:
-  #   container_name: database
-  #   image: postgres:14.6-alpine
+  # postgres:
+  #   image: postgres:latest
+  #   container_name: postgres_container
   #   environment:
-  #     POSTGRES_DB: database
-  #     POSTGRES_USER: user
-  #     POSTGRES_PASSWORD: pass
+  #     POSTGRES_USER: postgres_user
+  #     POSTGRES_PASSWORD: postgres_password
+  #     POSTGRES_DB: postgres_db
+  #     PGDATA: /var/lib/postgresql/data/pgdata
+  #   ports:
+  #     - "5430:5432"
   #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   restart: always
+  #     - ./pgdata:/var/lib/postgresql/data/pgdata
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.50'
+  #         memory: 512M
+  #       reservations:
+  #         cpus: '0.25'
+  #         memory: 256M
+  #   command: >
+  #     postgres -c max_connections=1000
+  #              -c shared_buffers=256MB
+  #              -c effective_cache_size=768MB
+  #              -c maintenance_work_mem=64MB
+  #              -c checkpoint_completion_target=0.7
+  #              -c wal_buffers=16MB
+  #              -c default_statistics_target=100
+  #   healthcheck:
+  #     test: [ "CMD-SHELL", "pg_isready -U postgres_user -d postgres_db" ]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+  #   restart: unless-stopped
+  #   tty: true
+  #   stdin_open: true
+
+
 
   api:
     container_name: api
@@ -31,21 +59,19 @@ services:
       context: .
       dockerfile: Dockerfile.api
     image: api
-    expose:
-      - 8000
     ports:
       - 8000:8000
     volumes:
       - ./api:/api
     # environment:
-      # DB_HOST: database
-      # DB_NAME: database
-      # DB_USER: user
-      # DB_PASS: pass
+    #   DB_HOST: postgres
+    #   DB_NAME: postgres_db
+    #   DB_USER: postgres_user
+    #   DB_PASS: postgres_password
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     # depends_on:
-    #   - database
-    # restart: always
+    #   - postgres
+
 
   frontend:
     container_name: frontend
@@ -62,21 +88,11 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile.webgl
-    expose:
-      - 8001
+    ports:
+      - 8001:8001
     depends_on:
       - frontend
 
-
-  # ollama:
-  #   image: ollama/ollama
-  #   container_name: ollama
-  #   ports:
-  #     - "11434:11434"
-  #   volumes:
-  #     - ollama:/root/.ollama
-  #   command: ["ollama", "run", "llama3:8b"]
-    
 volumes:
-  postgres_data: {}
-  # ollama:
+  pgdata:
+    driver: local

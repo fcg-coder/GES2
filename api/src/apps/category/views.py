@@ -51,7 +51,7 @@ def graph(request):
         
         # Если категория имеет внутренние записи, добавляем их как узлы и связываем с родительской категорией
         if category.flagForInternalRecordings:
-            for subcategory in category.internalPages.all():
+            for subcategory in category.childCategoies.all():
                 G.add_node(subcategory.id, name=subcategory.nameOfCategory)
                 G.add_edge(category.id, subcategory.id)
         
