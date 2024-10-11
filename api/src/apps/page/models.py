@@ -39,20 +39,13 @@ class Page(models.Model):
     tagGraphicalMMOs = models.CharField('ТЭГ graphical_MMOs', max_length=20, choices=GRAPHICAL_MMO_CHOICES, blank=True)
     parentCategoryKey = models.ForeignKey(Category, verbose_name='Родительская категория', on_delete=models.CASCADE)
 
-    def save(self, *args, **kwargs):  
-        super().save(*args, **kwargs)  # Сохраняем объект Page сначала
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
-        # После сохранения добавляем страницу в внутренние страницы родительской категории
-        if self.parentCategoryKey:  
-            self.check_countOfNestedWorld()  # Проверяем количество подкатегорий
+        # Обновляем количество миров для родительской категории, если она есть
+        if self.parentCategoryKey:
             self.parentCategoryKey.update_count_of_virtual_worlds()
-    def check_countOfNestedWorld(self):  # Метод для проверки количества подкатегорий
-        if not self.parentCategoryKey.flagForInternalRecordings:
-            self.parentCategoryKey.countOfNestedWorld += 1  # Обновляем количество подкатегорий
-        else:
-            self.parentCategoryKey.countOfNestedWorld = 0  # Если есть подкатегории, устанавливаем количество в 0
-        
-        self.parentCategoryKey.save(update_fields=['countOfNestedWorld'])  # Сохраняем изменения только в поле countOfNestedWorld
+
 
     def __str__(self):
         return self.nameOfPage

@@ -2,6 +2,8 @@ from django.db import models  # Импортируем базовый класс
 from django.db.models.signals import post_save  # Импортируем сигнал post_save для обработки событий после сохранения модели
 from django.dispatch import receiver  # Импортируем декоратор receiver для связывания сигналов с обработчиками
 from django.db.models import Sum
+from django.apps import apps
+
 
 class Category(models.Model):  # Определяем модель Category, которая будет представлять категорию в базе данных
     id = models.AutoField(primary_key=True)  # Поле id, автоматически увеличиваемое и являющееся первичным ключом
@@ -47,16 +49,29 @@ class Category(models.Model):  # Определяем модель Category, к�
         else:
             super().save(*args, **kwargs)  # Если флаг установлен, просто сохраняем без сигналов
 
+
+
     def update_count_of_virtual_worlds(self):
-        # Обновляем количество виртуальных миров для текущей категории
-        self.countOfNestedWorld = self.subcategories.aggregate(Sum('countOfNestedWorld'))['countOfNestedWorld__sum'] or 0
+        # Если категория конечная (нет подкатегорий)
+        if not self.flagForInternalRecordings:
+            # Получаем модель Page через ленивый импорт
+            Page = apps.get_model('page', 'Page')  # 'page' - имя приложения, 'Page' - имя модели
+            # Считаем количество страниц для этой конечной категории
+            count_from_pages = Page.objects.filter(parentCategoryKey=self).count()
+            self.countOfNestedWorld = count_from_pages
+        else:
+            # Если категория имеет подкатегории, считаем количество миров для подкатегорий
+            count_from_subcategories = self.subcategories.aggregate(Sum('countOfNestedWorld'))['countOfNestedWorld__sum'] or 0
+            self.countOfNestedWorld = count_from_subcategories
 
         # Сохраняем изменения
         self.save(update_fields=['countOfNestedWorld'])
 
-        # Если есть родительская категория, вызываем метод для нее
+        # Если есть родительская категория, обновляем ее рекурсивно
         if self.parentCategory:
-            self.parentCategory.update_count_of_virtual_worlds()      
+            self.parentCategory.update_count_of_virtual_worlds()
+
+   
 
     def link_child(self, child):  # Метод для связывания дочерней категории с родительской
         child.parentCategory = self  # Устанавливаем текущую категорию как родительскую для дочерней

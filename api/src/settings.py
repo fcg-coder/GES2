@@ -160,3 +160,4 @@ EMAIL_HOST_USER = 'stasyanrus610@gmail.com'
 EMAIL_HOST_PASSWORD = ''
 
 TEST_DISCOVERY_ROOT = 'src/apps'
+
