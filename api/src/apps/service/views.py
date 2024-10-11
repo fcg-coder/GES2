@@ -17,7 +17,7 @@ from category.models import Category
 # Импорт библиотеки Plotly для работы с графиками
 import plotly.graph_objects as go
 # Импорт библиотеки networkx для работы с графами
-import networkx as nx
+
 
 # Импорт всех зарегистрированных приложений в проекте
 from django.apps import apps
@@ -27,7 +27,6 @@ import pickle
 from django.http import JsonResponse
 
 # Импорт JSON сериализатора из Django
-from django.core.serializers.json import DjangoJSONEncoder
 
 # Повторный импорт модели Category из приложения category (здесь это избыточно)
 from category.models import Category
@@ -95,39 +94,6 @@ def createNewPage(request):
         'all_text_tags': all_text_tags,
         'all_graphical_tags': all_graphical_tags,
     })
-
-
-# Функция для генерации графа и его отправки на фронтенд
-def graph(request):
-    # Создаем пустой граф с помощью networkx
-    G = nx.Graph()
-    
-    # Получаем все категории из модели Category
-    categorys = Category.objects.all()
-    
-    # Добавляем узлы и связи в граф для каждой категории
-    for category in categorys:
-        G.add_node(category.id, name=category.nameOfPage)
-        
-        # Если категория имеет внутренние записи, добавляем их как узлы и связываем с родительской категорией
-        if category.FlagForInternalRecordings == 1:
-            for podcategory in category.internal_pages.all():
-                G.add_node(podcategory.id, name=podcategory.nameOfPage)
-                G.add_edge(category.id, podcategory.id)
-        
-        # Если категория не имеет внутренних записей, связываем ее с объектами из модели page
-        if category.FlagForInternalRecordings == 0:
-            objs = Page.objects.filter(category=category)
-            for obj in objs:
-                G.add_node(obj.id, name=obj.nameOfPage)
-                G.add_edge(category.id, obj.id)
-    
-    # Подготавливаем данные для отправки на фронтенд в формате JSON
-    nodes = [{'id': node, 'label': data['name']} for node, data in G.nodes(data=True)]
-    edges = [{'from': u, 'to': v} for u, v in G.edges()]
-    
-    # Отправляем данные как JSON-ответ
-    return JsonResponse({'nodes': nodes, 'edges': edges}, encoder=DjangoJSONEncoder)
 
 
 # Функция для отображения диаграммы Эйлера-Венна
