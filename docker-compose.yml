@@ -14,42 +14,43 @@ services:
       # - webgl
     restart: always
 
-  # postgres:
-  #   image: postgres:latest
-  #   container_name: postgres_container
-  #   environment:
-  #     POSTGRES_USER: postgres_user
-  #     POSTGRES_PASSWORD: postgres_password
-  #     POSTGRES_DB: postgres_db
-  #     PGDATA: /var/lib/postgresql/data/pgdata
-  #   ports:
-  #     - "5430:5432"
-  #   volumes:
-  #     - ./pgdata:/var/lib/postgresql/data/pgdata
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.50'
-  #         memory: 512M
-  #       reservations:
-  #         cpus: '0.25'
-  #         memory: 256M
-  #   command: >
-  #     postgres -c max_connections=1000
-  #              -c shared_buffers=256MB
-  #              -c effective_cache_size=768MB
-  #              -c maintenance_work_mem=64MB
-  #              -c checkpoint_completion_target=0.7
-  #              -c wal_buffers=16MB
-  #              -c default_statistics_target=100
-  #   healthcheck:
-  #     test: [ "CMD-SHELL", "pg_isready -U postgres_user -d postgres_db" ]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 5
-  #   restart: unless-stopped
-  #   tty: true
-  #   stdin_open: true
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_DB: postgres_db
+      PGDATA: /var/lib/postgresql/data/pgdata/
+    ports:
+      - "5432:5432"
+    volumes:
+      # - ./map_data:/var/lib/postgresql/data/pgdata
+      - map_data:/var/lib/postgresql/data/pgdata
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.50'
+    #       memory: 512M
+    #     reservations:
+    #       cpus: '0.25'
+    #       memory: 256M
+    # command: >
+    #   postgres -c max_connections=1000
+    #            -c shared_buffers=256MB
+    #            -c effective_cache_size=768MB
+    #            -c maintenance_work_mem=64MB
+    #            -c checkpoint_completion_target=0.7
+    #            -c wal_buffers=16MB
+    #            -c default_statistics_target=100
+    # healthcheck:
+    #   test: [ "CMD-SHELL", "pg_isready -U postgres_user -d postgres_db" ]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 5
+    # restart: unless-stopped
+    # tty: true
+    # stdin_open: true
 
 
 
@@ -63,14 +64,14 @@ services:
       - 8000:8000
     volumes:
       - ./api:/api
-    # environment:
-    #   DB_HOST: postgres
-    #   DB_NAME: postgres_db
-    #   DB_USER: postgres_user
-    #   DB_PASS: postgres_password
+    environment:
+      DB_HOST: postgres
+      DB_NAME: postgres_db
+      DB_USER: postgres_user
+      DB_PASS: postgres_password
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    # depends_on:
-    #   - postgres
+    depends_on:
+      - postgres
 
 
   frontend:
@@ -94,5 +95,4 @@ services:
       - frontend
 
 volumes:
-  pgdata:
-    driver: local
+  map_data:

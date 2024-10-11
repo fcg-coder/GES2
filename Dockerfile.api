@@ -14,8 +14,6 @@ RUN pip install -r /app/requirements.txt
 RUN adduser --disabled-password fcg
 
 RUN python manage.py makemigrations
-RUN python manage.py migrate
-
 
 USER fcg
 
