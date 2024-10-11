@@ -2,8 +2,8 @@ from django.contrib import admin
 from .models import Category
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('nameOfCategory', 'countOfNestedWorld', 'parentPage', 'flagForInternalRecordings', 'flagForThePresenceOfAParent')
-    list_filter = ('flagForInternalRecordings', 'flagForThePresenceOfAParent', 'parentPage')  # Фильтры для боковой панели
+    list_display = ('nameOfCategory', 'countOfNestedWorld', 'parentCategory', 'flagForInternalRecordings', 'flagForThePresenceOfAParent')
+    list_filter = ('flagForInternalRecordings', 'flagForThePresenceOfAParent', 'parentCategory')  # Фильтры для боковой панели
     search_fields = ('nameOfCategory',)  # Поля для поиска
     ordering = ('nameOfCategory',)  # Упорядочивание по имени категории
 

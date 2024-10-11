@@ -20,7 +20,7 @@ class CategoryModelTest(TestCase):  # Определяем класс тесто
         self.parent_category.link_child(self.child_category)  # Связываем дочернюю категорию с родительской
         
         # Проверяем, что у дочерней категории установлен родитель
-        self.assertEqual(self.child_category.parentPage, self.parent_category)  # Проверяем, что parentPage дочерней категории совпадает с родительской
+        self.assertEqual(self.child_category.parentCategory, self.parent_category)  # Проверяем, что parentCategory дочерней категории совпадает с родительской
 
         # Проверяем, что у родителя добавлена дочерняя категория в internalPages
         self.assertIn(self.child_category, self.parent_category.internalPages.all())  # Проверяем, что дочерняя категория есть в internalPages родителя
@@ -30,7 +30,7 @@ class CategoryModelTest(TestCase):  # Определяем класс тесто
 
     def test_flags_update_on_save(self):  # Тест для проверки обновления флагов при сохранении категории
         """Проверка, что флаги обновляются при сохранении категории"""  # Описание теста
-        self.child_category.parentPage = self.parent_category  # Устанавливаем родителя для дочерней категории
+        self.child_category.parentCategory = self.parent_category  # Устанавливаем родителя для дочерней категории
         self.child_category.save()  # Сохраняем дочернюю категорию
         
         # Проверяем, что флаг наличия родительской категории установлен
