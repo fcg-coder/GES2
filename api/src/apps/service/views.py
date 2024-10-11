@@ -62,7 +62,7 @@ def feedback_submit(request):
         # email_message.send()
 
         # Создаем объект обратной связи и сохраняем его в базе данных
-        fb = feedback(name=name, email=email, subject=subject, message=message, attachment=attachment)
+        fb = Feedback(name=name, email=email, subject=subject, message=message, attachment=attachment)
         fb.save()
         
         # Перенаправляем пользователя после успешной отправки формы
@@ -78,7 +78,7 @@ def createNewPage(request):
     category = Category.objects.filter(FlagForInternalRecordings=0).values('id', 'nameOfPage')
     
     # Получаем все страницы из модели page
-    all_pages = page.objects.all()
+    all_pages = Page.objects.all()
 
     # Инициализируем множества для хранения уникальных текстовых и графических тегов
     all_text_tags = set()
@@ -117,7 +117,7 @@ def graph(request):
         
         # Если категория не имеет внутренних записей, связываем ее с объектами из модели page
         if category.FlagForInternalRecordings == 0:
-            objs = page.objects.filter(category=category)
+            objs = Page.objects.filter(category=category)
             for obj in objs:
                 G.add_node(obj.id, name=obj.nameOfPage)
                 G.add_edge(category.id, obj.id)
@@ -134,7 +134,7 @@ def graph(request):
 def euler_diagram_view(request):
     # Получаем данные из моделей Category и page
     category_data = Category.objects.all()
-    page_data = page.objects.all()
+    page_data = Page.objects.all()
 
     # Создаем списки меток и родительских меток для модели Category
     category_labels = [entry.nameOfPage for entry in category_data]
