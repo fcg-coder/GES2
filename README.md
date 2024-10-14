@@ -86,10 +86,7 @@ GES2/
 ### Проксирование сервера
 Проксирование сервера в нашем проекте обеспечивает связь между разными сервисами. Nginx слушает входящие запросы на порту 8080 и направляет их: все запросы корневого URL отправляются на 3000 порт с React, далее клиент обращется к серверу через /backend/, а запросы к /webgl/ обрабатываются как статические файлы веб-приложения Unity WebGL. 
 
-![Проксирование nginx](image.png)
-
-
-![Alt](https://repobeats.axiom.co/api/embed/2250acb061e74a89abcdb374859396d156304c5f.svg "Repobeats analytics image")
+![Проксирование nginx](docs/image.png)
 
 ## Установка
 
@@ -121,3 +118,10 @@ http://localhost:8080
     - https://github.com/fcg-coder
 * Идейная часть:
     - https://lshfn.ru/
+
+
+
+
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+docker exec -it ollama ollama run llama3:8b
+https://habr.com/ru/articles/825678/
