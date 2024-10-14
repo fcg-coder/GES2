@@ -1,27 +1,18 @@
 
-# Используем более стабильную версию Node.js
 FROM node:18.17.0-alpine
 
-# Устанавливаем рабочую директорию в контейнере
+
 WORKDIR /app
 
-# Копируем package.json и package-lock.json в рабочую директорию
+
 COPY frontend/package*.json ./
 
-# Устанавливаем все зависимости
 RUN npm install
-RUN npm install axios
-RUN npm i handy-svg
-RUN npm install react-svg
-RUN npm install react-router-dom
-RUN npm install styled-components
-RUN npm install vis-network
+RUN npm install axios handy-svg react-svg react-router-dom styled-components vis-network
 
 
-# Копируем остальной код приложения в контейнер
 COPY frontend/ .
 
-# Открываем порт 3000 для внешнего доступа
 EXPOSE 3000
 
 # Запускаем приложение
