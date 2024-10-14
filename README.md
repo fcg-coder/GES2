@@ -88,9 +88,6 @@ GES2/
 
 ![Проксирование nginx](image.png)
 
-
-![Alt](https://repobeats.axiom.co/api/embed/2250acb061e74a89abcdb374859396d156304c5f.svg "Repobeats analytics image")
-
 ## Установка
 
 ### Требования
