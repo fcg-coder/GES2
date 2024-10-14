@@ -11,7 +11,7 @@ const Graph = () => {
         // Функция для загрузки данных с сервера
         const fetchData = async () => {
             try {
-                const response = await fetch('/backend/service/graph/');
+                const response = await fetch('/api/graph/');
                 const data = await response.json();
                 setGraphData(data);
             } catch (error) {
