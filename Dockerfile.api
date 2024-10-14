@@ -1,6 +1,6 @@
 FROM python:3.9-alpine3.16
 
-COPY requirements.txt /app/requirements.txt 
+COPY api/requirements.txt /app/requirements.txt 
 COPY api /api
 
 WORKDIR /api

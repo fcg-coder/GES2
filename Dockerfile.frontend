@@ -1,15 +1,14 @@
-
 FROM node:18.17.0-alpine
-
 
 WORKDIR /app
 
+# Установка переменной окружения
+ENV NODE_OPTIONS=--openssl-legacy-provider
 
 COPY frontend/package*.json ./
 
 RUN npm install
 RUN npm install axios handy-svg react-svg react-router-dom styled-components vis-network
-
 
 COPY frontend/ .
 
