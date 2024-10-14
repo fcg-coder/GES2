@@ -106,10 +106,8 @@ services:
       container_name: elasticsearch
       environment:
         - discovery.type=single-node
-        - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}  # Пароль пользователя 'elastic'
-        - ELASTIC_USERNAME=elastic  # Логин по умолчанию
-        - xpack.security.enabled=true  # Включение безопасности
-        - xpack.security.encryptionKey=${ENCRYPTION_KEY}  # Ключ для шифрования (если нужно)
+        - ELASTIC_USERNAME=elastic 
+        - xpack.security.enabled=false 
       ports:
         - "9200:9200"
       networks:
@@ -126,15 +124,13 @@ services:
     container_name: kibana
     image: docker.elastic.co/kibana/kibana:8.15.2
     
-    # environment:
-    #   - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    #   # - ELASTICSEARCH_USERNAME=elastic
-    #   - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
-    #   - NODE_OPTIONS=--openssl-legacy-provider
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - NODE_OPTIONS=--openssl-legacy-provider
+      - xpack.fleet.enabled=true
+
     ports:
       - "5601:5601"
-    # volumes:
-    #   - ./kibana.yml:/usr/share/kibana/config/kibana.yml  
     depends_on:
       - elasticsearch
     restart: always
@@ -149,6 +145,8 @@ services:
 volumes:
   map_data:
   esdata:
+    driver: local
 
 networks:
   elastic:
+    driver: bridge

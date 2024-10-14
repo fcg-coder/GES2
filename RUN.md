@@ -1,1 +1,0 @@
-export ELASTIC_PASSWORD=""
