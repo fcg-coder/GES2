@@ -88,21 +88,31 @@ import os
 
 DATABASES = {
 
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': os.environ.get('DB_NAME', 'postgres_db'),
-    #     'USER': os.environ.get('DB_USER', 'postgres_user'),
-    #     'PASSWORD': os.environ.get('DB_PASS', 'postgres_password'),
-    #     'HOST': os.environ.get('DB_HOST', 'postgres'),
-    #     'PORT': '5432',  # Порт, на котором слушает PostgreSQL в контейнере
-    # }
-
     'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'postgres_db'),
+        'USER': os.environ.get('DB_USER', 'postgres_user'),
+        'PASSWORD': os.environ.get('DB_PASS', 'postgres_password'),
+        'HOST': os.environ.get('DB_HOST', 'postgres'),
+        'PORT': '5432',  # Порт, на котором слушает PostgreSQL в контейнере
+    }
+
+    # 'default': {
+    #         'ENGINE': 'django.db.backends.sqlite3',
+    #         'NAME': BASE_DIR / 'db.sqlite3',
+    #     }
             
 }
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'https://elasticsearch:9200',
+        'http_auth': ('user', 'password'),  # Укажите имя пользователя и пароль, если требуется
+        'use_ssl': True,
+        'verify_certs': False,  # Используйте True, если у вас есть сертификаты
+    },
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
