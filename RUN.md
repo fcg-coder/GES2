@@ -1,0 +1,1 @@
+export ELASTIC_PASSWORD=""

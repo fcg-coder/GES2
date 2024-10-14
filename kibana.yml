@@ -1,0 +1,5 @@
+xpack.security.encryptionKey: "4930a9dce7c7a89c9ef0a13f0aba7c42715e80e81c77ec3a85daa5b9b1460c7b"
+xpack.encryptedSavedObjects.encryptionKey: "4930a9dce7c7a89c9ef0a13f0aba7c42715e80e81c77ec3a85daa5b9b1460c7b"
+xpack.reporting.encryptionKey: "4930a9dce7c7a89c9ef0a13f0aba7c42715e80e81c77ec3a85daa5b9b1460c7b"
+elasticsearch.hosts: ["http://localhost:9200"]
+elasticsearch.serviceAccountToken: "automatic"  # Укажите специальный маркер
