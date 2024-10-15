@@ -29,7 +29,7 @@ jobs:
         python3 manage.py test category page
 
   deploy:
-    if: github.ref == 'refs/heads/master'  # Деплой только при пуше в ветку master
+    if: github.ref == 'refs/heads/main'  # Деплой только при пуше в ветку master
     runs-on: ubuntu-latest
 
     steps:
