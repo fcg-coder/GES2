@@ -11,6 +11,7 @@ services:
       - 8080:80
     depends_on:
       - frontend
+      # - webgl
     restart: always
     networks:
       - elastic
@@ -26,6 +27,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
+      # - ./map_data:/var/lib/postgresql/data/pgdata
       - map_data:/var/lib/postgresql/data/pgdata
     deploy:
       resources:
