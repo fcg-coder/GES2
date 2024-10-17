@@ -1,6 +1,6 @@
-// Sidebar.js
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom'; // Импортируем Link для внутренней навигации
+import axios from 'axios'; // Импортируем axios для HTTP-запросов
 import {
   SidebarContainer,
   MenuButton,
@@ -14,6 +14,8 @@ import {
 const Sidebar = ({ open, toggleSidebar }) => {
   const sidebarRef = useRef(null);
   const [buttonVisible, setButtonVisible] = useState(true);
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -37,6 +39,30 @@ const Sidebar = ({ open, toggleSidebar }) => {
     }
   }, [open]);
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await axios.get(`http://localhost:9200/<имя_индекса>/_search`, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          query: {
+            multi_match: {
+              query: query,
+              fields: ["*"] // Поиск по всем полям
+            }
+          }
+        }
+      });
+      
+      setResults(response.data.hits.hits);
+    } catch (error) {
+      console.error("Ошибка при поиске:", error);
+    }
+  };
+
   return (
     <>
       {/* Контейнер для кнопок (ссылок и кнопки меню) */}
@@ -56,7 +82,27 @@ const Sidebar = ({ open, toggleSidebar }) => {
         </CloseButton>
 
         {/* Поисковая строка */}
-        <SearchBar type="text" placeholder="Search..." />
+        <form onSubmit={handleSearch}>
+          <SearchBar 
+            type="text" 
+            placeholder="Search..." 
+            value={query} 
+            onChange={(e) => setQuery(e.target.value)} 
+          />
+          <button type="submit">Поиск</button>
+        </form>
+
+        {/* Результаты поиска */}
+        {results.length > 0 && (
+          <div>
+            <h2>Результаты поиска</h2>
+            <ul>
+              {results.map((result) => (
+                <li key={result._id}>{JSON.stringify(result._source)}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
           <ul>
@@ -72,9 +118,9 @@ const Sidebar = ({ open, toggleSidebar }) => {
           </ul>
           <ul>
             <h2>Index</h2>
-            <li><Link to="/graph">Graph</Link></li> {/* Замена ссылки на компонент Link */}
+            <li><Link to="/graph">Graph</Link></li>
             <li><Link to="/diagram/">Diagram</Link></li>
-            <li><Link to="/graph">Graph</Link></li> {/* Замена ссылки на компонент Link */}
+            <li><Link to="/graph">Graph</Link></li>
             <li><Link to="/diagram/">Diagram</Link></li>
           </ul>
         </div>
