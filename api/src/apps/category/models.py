@@ -3,7 +3,10 @@ from django.db.models.signals import post_save  # Импортируем сиг�
 from django.dispatch import receiver  # Импортируем декоратор receiver для связывания сигналов с обработчиками
 from django.db.models import Sum
 from django.apps import apps
+from elasticsearch import Elasticsearch
 
+# Убедитесь, что указаны протокол, хост и порт
+es = Elasticsearch([{'scheme': 'http', 'host': 'elasticsearch', 'port': 9200}])
 
 class Category(models.Model):  # Определяем модель Category, которая будет представлять категорию в базе данных
     id = models.AutoField(primary_key=True)  # Поле id, автоматически увеличиваемое и являющееся первичным ключом
@@ -30,12 +33,10 @@ class Category(models.Model):  # Определяем модель Category, к�
         verbose_name = 'Категория'  # Человекочитаемое имя модели в единственном числе
         verbose_name_plural = 'Категории'  # Человекочитаемое имя модели во множественном числе
 
-
     def save(self, *args, update_parent=True, **kwargs):  # Переопределяем метод save с аргументом update_parent по умолчанию
         if update_parent:
             self.flagForThePresenceOfAParent = self.parentCategory is not None  # Устанавливаем флаг наличия родительской категории
 
-           
         if not getattr(self, '_skip_signal', False):
             self._skip_signal = True
             super().save(*args, **kwargs)
@@ -48,13 +49,25 @@ class Category(models.Model):  # Определяем модель Category, к�
             self.parentCategory.flagForInternalRecordings = True
             self.parentCategory.save(update_parent=False)  # Передаем False, чтобы предотвратить рекурсию
 
+        # Индексация данных в Elasticsearch
+        self.index_in_elasticsearch()
 
+    def index_in_elasticsearch(self):
+        """Метод для индексации данных категории в Elasticsearch"""
+        document = {
+            'name': self.nameOfCategory,
+            'count_of_nested_worlds': self.countOfNestedWorld,
+            'has_parent': self.flagForThePresenceOfAParent,
+            'internal_recordings': self.flagForInternalRecordings,
+            'parent_category_id': self.parentCategory.id if self.parentCategory else None
+        }
 
+        # Индексация документа в Elasticsearch
+        es.index(index='categories', id=self.id, body=document)
 
     # Запускается при сохранении объекта Page 
     # Рекурсивно обновляет всем родительским категориям количество миров
     def update_count_of_virtual_worlds(self):
-    
         if not self.flagForInternalRecordings:
             Page = apps.get_model('page', 'Page') 
             self.countOfNestedWorld = Page.objects.filter(parentCategoryKey=self).count()
@@ -68,5 +81,3 @@ class Category(models.Model):  # Определяем модель Category, к�
         # Если есть родительская категория, обновляем ее рекурсивно
         if self.parentCategory:
             self.parentCategory.update_count_of_virtual_worlds()
-
-   

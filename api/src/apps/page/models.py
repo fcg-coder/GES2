@@ -4,6 +4,10 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.core.files.storage import default_storage
 import os
+from elasticsearch import Elasticsearch
+
+# Убедитесь, что указаны протокол, хост и порт
+es = Elasticsearch([{'scheme': 'http', 'host': 'elasticsearch', 'port': 9200}])
 
 class Page(models.Model):
     STATUS_CHOICES = (
@@ -46,6 +50,25 @@ class Page(models.Model):
         if self.parentCategoryKey:
             self.parentCategoryKey.update_count_of_virtual_worlds()
 
+        try:
+            # Индексация данных в Elasticsearch
+            self.index_in_elasticsearch()
+        except Exception as e:
+            # Обработка ошибки индексации
+            print(f"Ошибка индексации в Elasticsearch: {e}")
+
+    def index_in_elasticsearch(self):
+        """Метод для индексации данных страницы в Elasticsearch"""
+        document = {
+            'name': self.nameOfPage,
+            'review_status': self.reviewStatus,
+            'text_based_tag': self.tagTextBasedMMOs,
+            'graphical_tag': self.tagGraphicalMMOs,
+            'parent_category_id': self.parentCategoryKey.id if self.parentCategoryKey else None
+        }
+
+        # Индексация документа в Elasticsearch
+        es.index(index='pages', id=self.id, body=document)
 
     def __str__(self):
         return self.nameOfPage
