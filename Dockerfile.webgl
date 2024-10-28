@@ -3,6 +3,6 @@ FROM nginx:alpine
 COPY config/webgl.conf /etc/nginx/conf.d/webgl.conf
 
 WORKDIR /webgl
-COPY webgl/ .
+COPY webgl/webgl .
 
 EXPOSE 8001
