@@ -6,9 +6,17 @@ from django.core.files.storage import default_storage
 import os
 from elasticsearch import Elasticsearch
 
-# Убедитесь, что указаны протокол, хост и порт
-es = Elasticsearch([{'scheme': 'http', 'host': 'elasticsearch', 'port': 9200}])
-
+es = None
+try:
+    es = Elasticsearch([{'scheme': 'http', 'host': 'elasticsearch', 'port': 9200}])
+    if es.ping():
+        print("Подключение к Elasticsearch успешно!")
+    else:
+        print("Не удалось подключиться к Elasticsearch.")
+        es = None
+except:
+    print("Err")
+    
 class Page(models.Model):
     STATUS_CHOICES = (
         ('pending', 'На рассмотрении'),
@@ -50,6 +58,7 @@ class Page(models.Model):
         if self.parentCategoryKey:
             self.parentCategoryKey.update_count_of_virtual_worlds()
 
+
         try:
             # Индексация данных в Elasticsearch
             self.index_in_elasticsearch()
@@ -67,8 +76,8 @@ class Page(models.Model):
             'parent_category_id': self.parentCategoryKey.id if self.parentCategoryKey else None
         }
 
-        # Индексация документа в Elasticsearch
-        es.index(index='pages', id=self.id, body=document)
+        if es is not None:# Индексация документа в Elasticsearch
+            es.index(index='pages', id=self.id, body=document)  
 
     def __str__(self):
         return self.nameOfPage

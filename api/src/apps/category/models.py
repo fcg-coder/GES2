@@ -5,8 +5,18 @@ from django.db.models import Sum
 from django.apps import apps
 from elasticsearch import Elasticsearch
 
-# Убедитесь, что указаны протокол, хост и порт
-es = Elasticsearch([{'scheme': 'http', 'host': 'elasticsearch', 'port': 9200}])
+
+es = None
+try:
+    es = Elasticsearch([{'scheme': 'http', 'host': 'elasticsearch', 'port': 9200}])
+    if es.ping():
+        print("Подключение к Elasticsearch успешно!")
+    else:
+        print("Не удалось подключиться к Elasticsearch.")
+        es = None
+except:
+    print("Err")
+
 
 class Category(models.Model):  # Определяем модель Category, которая будет представлять категорию в базе данных
     id = models.AutoField(primary_key=True)  # Поле id, автоматически увеличиваемое и являющееся первичным ключом
@@ -50,9 +60,16 @@ class Category(models.Model):  # Определяем модель Category, к�
             self.parentCategory.save(update_parent=False)  # Передаем False, чтобы предотвратить рекурсию
 
         # Индексация данных в Elasticsearch
-        self.index_in_elasticsearch()
+        try:
+            # Индексация данных в Elasticsearch
+            self.index_in_elasticsearch()
+        except Exception as e:
+            # Обработка ошибки индексации
+            print(f"Ошибка индексации в Elasticsearch: {e}")
+
 
     def index_in_elasticsearch(self):
+        
         """Метод для индексации данных категории в Elasticsearch"""
         document = {
             'name': self.nameOfCategory,
