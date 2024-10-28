@@ -1,18 +1,25 @@
-FROM node:18.17.0-alpine
+# Используем официальный образ Node.js  
+FROM node:20-alpine
 
+# Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Установка переменной окружения
+# Устанавливаем переменную окружения
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
-COPY frontend/package*.json ./
+# Копируем package.json и package-lock.json (если есть) для установки зависимостей
+COPY frontend/package.json frontend/package-lock.json ./
 
+# Устанавливаем зависимости
 RUN npm install
-RUN npm install axios handy-svg react-svg react-router-dom styled-components vis-network
+RUN npm install vis-network react-svg styled-components axios
 
+# Копируем все файлы проекта
 COPY frontend/ .
 
+# Открываем порт, на котором будет работать Vite
 EXPOSE 3000
 
-# Запускаем приложение
-CMD ["npm", "start"]
+# Запускаем приложение в режиме разработки
+CMD ["npm", "run", "dev", "--", "--host"]
+

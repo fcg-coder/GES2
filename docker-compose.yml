@@ -85,6 +85,8 @@ services:
       dockerfile: Dockerfile.frontend
     depends_on:
       - api
+    # ports:
+    #   - 3000:3000
     restart: always
     networks:
       - elastic
