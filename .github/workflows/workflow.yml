@@ -56,7 +56,8 @@ jobs:
           cd / &&
           docker-compose down &&
           docker-compose up --build -d"
-  
+
+          
   notify:
     runs-on: ubuntu-latest
     steps:
