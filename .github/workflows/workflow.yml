@@ -77,4 +77,4 @@ jobs:
 
       - name: Send commit message to Telegram
         run: |
-          python send_message.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "${{ env.COMMIT_MESSAGE }} - Комментарии: ${{ env.COMMIT_COMMENTS }}"
+          python send_message.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "${{ env.COMMIT_MESSAGE }}"
