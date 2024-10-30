@@ -56,3 +56,19 @@ jobs:
           cd / &&
           docker-compose down &&
           docker-compose up --build -d"
+  
+          
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get commit message
+        id: get_commit_message
+        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+
+      - name: Send commit message to Telegram
+        run: |
+          python send_message.py 7301918824:AAHFHgnR-NlYsi0x6R1MMlez1Giswa61V7I 507083569 "${{ env.COMMIT_MESSAGE }}"
+          # python send_message.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "${{ env.COMMIT_MESSAGE }}"
