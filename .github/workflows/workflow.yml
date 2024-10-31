@@ -3,7 +3,7 @@ name: Django CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Запускать только на ветке main
+      - '**'  # Запускать на все ветки
 
 jobs:
   test:
@@ -44,15 +44,15 @@ jobs:
     - name: Add server to known hosts
       run: |
         mkdir -p ~/.ssh
-        ssh-keyscan -H 89.19.216.56 >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
     - name: Copy files via SCP
       run: |
-        scp -r ./* root@89.19.216.56:/
+        scp -r ./* root@${{ secrets.SERVER_IP }}:/
 
     - name: Run docker-compose
       run: |
-        ssh root@89.19.216.56 "
+        ssh root@${{ secrets.SERVER_IP }} "
           cd / &&
           docker-compose down &&
           docker-compose up --build -d"
@@ -79,3 +79,4 @@ jobs:
         run: | 
           cd notify
           python send_message_pipeline.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "${{ env.COMMIT_MESSAGE }}" "${{ env.COMMIT_COMMENTS }}"
+          
