@@ -76,5 +76,6 @@ jobs:
       #     echo "COMMIT_COMMENTS=${COMMENTS:-'Нет комментариев'}" >> $GITHUB_ENV
 
       - name: Send commit message to Telegram
-        run: |
-          python send_message.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "${{ env.COMMIT_MESSAGE }}"
+        run: | 
+          cd notify
+          python send_message_pipline.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "${{ env.COMMIT_MESSAGE }}"
