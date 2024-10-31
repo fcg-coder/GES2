@@ -3,7 +3,7 @@ name: Django CI/CD Pipeline
 on:
   push:
     branches:
-      - '**'  # Запускать на все ветки
+      - main  # Запускать только на ветке main
 
 jobs:
   test:
@@ -29,7 +29,7 @@ jobs:
         python3 manage.py test category page
 
   deploy:
-    if: github.ref == 'refs/heads/main'  # Деплой только при пуше в ветку master
+    if: github.ref == 'refs/heads/main' && success()  # Деплой только при пуше в ветку main и успешных тестах
     runs-on: ubuntu-latest
 
     steps:
@@ -58,7 +58,9 @@ jobs:
           docker-compose up --build -d"
 
   notify:
+    if: github.ref == 'refs/heads/main' && success()  # Условие для выполнения job notify
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -77,5 +79,3 @@ jobs:
         run: | 
           cd notify
           python send_message_pipeline.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "${{ env.COMMIT_MESSAGE }}" "${{ env.COMMIT_COMMENTS }}"
-
-
