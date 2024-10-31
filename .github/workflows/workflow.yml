@@ -67,15 +67,15 @@ jobs:
 
       - name: Get commit message
         id: get_commit_message
-        run: echo "COMMIT_MESSAGE='$(git log -1 --pretty=%B | tr -d '\n')'" >> $GITHUB_ENV
+        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B | tr -d '\n')" >> $GITHUB_ENV
 
       - name: Get commit comments (optional)
         id: get_commit_comments
         run: |
           COMMENTS=$(git log -1 --pretty=format:%b | tr -d '\n')
-          echo "COMMIT_COMMENTS='${COMMENTS:-'Нет комментариев'}'" >> $GITHUB_ENV
+          echo "COMMIT_COMMENTS=${COMMENTS:-''}" >> $GITHUB_ENV
 
       - name: Send commit message to Telegram
         run: | 
           cd notify
-          python send_message_pipeline.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "${{ env.COMMIT_MESSAGE }}\n${{ env.COMMIT_COMMENTS }}"
+          python send_message_pipeline.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "${{ env.COMMIT_MESSAGE }} \n${{ env.COMMIT_COMMENTS }}"
