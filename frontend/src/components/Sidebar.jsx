@@ -1,19 +1,19 @@
 // Sidebar.js
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom'; // Импортируем Link для внутренней навигации
+import { Link } from 'react-router-dom';
 import {
   SidebarContainer,
   MenuButton,
   CloseButton,
-  Footer,
-  SearchBar,
   ButtonContainer,
   LinkButton
 } from './SidebarStyles';
+import Search from './Search'; // Импортируем компонент поиска
 
 const Sidebar = ({ open, toggleSidebar }) => {
   const sidebarRef = useRef(null);
   const [buttonVisible, setButtonVisible] = useState(true);
+  const [results, setResults] = useState([]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -23,40 +23,29 @@ const Sidebar = ({ open, toggleSidebar }) => {
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [toggleSidebar]);
 
   useEffect(() => {
-    if (open) {
-      setButtonVisible(false);
-    } else {
-      setButtonVisible(true);
-    }
+    setButtonVisible(!open);
   }, [open]);
 
   return (
     <>
-      {/* Контейнер для кнопок (ссылок и кнопки меню) */}
       <ButtonContainer>
         <LinkButton to="/backend/about/">About Us</LinkButton>
-        <LinkButton> <a href='/webgl/'> VR </a> </LinkButton>
+        <LinkButton><a href='/webgl/'> VR </a></LinkButton>
         <MenuButton visible={buttonVisible} onClick={() => toggleSidebar(true)}>
           MENU
         </MenuButton>
       </ButtonContainer>
 
-      {/* Боковое меню */}
       <SidebarContainer ref={sidebarRef} open={open}>
-        {/* Кнопка для закрытия меню внутри меню */}
-        <CloseButton onClick={() => toggleSidebar(false)}>
-          &times;
-        </CloseButton>
+   
 
-        {/* Поисковая строка */}
-        <SearchBar type="text" placeholder="Search..." />
+        <Search setResults={setResults} /> {/* Встраиваем компонент поиска */}
 
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
           <ul>
@@ -64,7 +53,7 @@ const Sidebar = ({ open, toggleSidebar }) => {
             <li><Link to="/about/">About us</Link></li>
             <li><Link to="/create/">Create new page</Link></li>
             <li><Link to="/feedback/">Feedback</Link></li>
-            <li><a href='/webgl/'> Unity </a> </li>
+            <li><a href='/webgl/'> Unity </a></li>
             <li><Link to="/donation/">Donation</Link></li>
             <li><Link to="/about/">About us</Link></li>
             <h2>Options</h2>
@@ -72,9 +61,9 @@ const Sidebar = ({ open, toggleSidebar }) => {
           </ul>
           <ul>
             <h2>Index</h2>
-            <li><Link to="/graph">Graph</Link></li> {/* Замена ссылки на компонент Link */}
+            <li><Link to="/graph">Graph</Link></li>
             <li><Link to="/diagram/">Diagram</Link></li>
-            <li><Link to="/graph">Graph</Link></li> {/* Замена ссылки на компонент Link */}
+            <li><Link to="/graph">Graph</Link></li>
             <li><Link to="/diagram/">Diagram</Link></li>
           </ul>
         </div>

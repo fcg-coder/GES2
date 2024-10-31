@@ -3,3 +3,4 @@ requests
 plotly
 networkx
 psycopg2-binary
+elasticsearch

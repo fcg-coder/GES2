@@ -85,33 +85,36 @@ WSGI_APPLICATION = 'src.wsgi.application'
 
 
 import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 DATABASES = {
-
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('DB_NAME', 'postgres_db'),
         'USER': os.environ.get('DB_USER', 'postgres_user'),
         'PASSWORD': os.environ.get('DB_PASS', 'postgres_password'),
-        'HOST': os.environ.get('DB_HOST', 'postgres'),
-        'PORT': '5432',  # Порт, на котором слушает PostgreSQL в контейнере
+        'HOST': os.environ.get('DB_HOST', 'localhost'),  # Измените на корректный хост
+        'PORT': '5432',
     }
-
-    # 'default': {
-    #         'ENGINE': 'django.db.backends.sqlite3',
-    #         'NAME': BASE_DIR / 'db.sqlite3',
-    #     }
-            
 }
+
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'test_db.sqlite3',
+    }
 
 ELASTICSEARCH_DSL = {
     'default': {
         'hosts': 'https://elasticsearch:9200',
-        'http_auth': ('user', 'password'),  # Укажите имя пользователя и пароль, если требуется
+        'http_auth': ('user', 'password'),  
         'use_ssl': True,
-        'verify_certs': False,  # Используйте True, если у вас есть сертификаты
+        'verify_certs': False,  
     },
 }
+
 
 
 # Password validation
