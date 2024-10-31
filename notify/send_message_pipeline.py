@@ -3,6 +3,11 @@ import sys
 
 def send_message(token, chat_id, commit_message, comments):
     url = f"https://api.telegram.org/bot{token}/sendMessage"
+    
+    # Проверяем, содержится ли комментарий в сообщении о коммите
+    if comments and comments in commit_message:
+        comments = None  # Убираем комментарий, если он дублируется
+
     # Формируем сообщение
     message = f"🤖👨‍💻\nNew update: {commit_message}"
     if comments:
