@@ -65,7 +65,7 @@ jobs:
 
       - name: Get commit message
         id: get_commit_message
-        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B | tr -d '\n')" >> $GITHUB_ENV
+        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:%s | tr -d '\n')" >> $GITHUB_ENV
 
       - name: Get commit comments (optional)
         id: get_commit_comments
