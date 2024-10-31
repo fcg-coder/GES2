@@ -57,8 +57,6 @@ jobs:
           docker-compose down &&
           docker-compose up --build -d"
 
-
-
   notify:
     runs-on: ubuntu-latest
     steps:
@@ -78,9 +76,12 @@ jobs:
       - name: Send commit message to Telegram
         run: | 
           cd notify
-          if [ -z "${{ env.COMMIT_COMMENTS }}" ]; then
-            MESSAGE="${{ env.COMMIT_MESSAGE }}"
-          else
-            MESSAGE="${{ env.COMMIT_MESSAGE }}\nComments: ${{ env.COMMIT_COMMENTS }}"
+          MESSAGE="${{ env.COMMIT_MESSAGE }}"
+          
+          if [ -n "${{ env.COMMIT_COMMENTS }}" ]; then
+            if [[ ! "${{ env.COMMIT_MESSAGE }}" =~ "${{ env.COMMIT_COMMENTS }}" ]]; then
+              MESSAGE="$MESSAGE\nComments: ${{ env.COMMIT_COMMENTS }}"
+            fi
           fi
+          
           python send_message_pipeline.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "$MESSAGE"
