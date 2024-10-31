@@ -57,7 +57,7 @@ jobs:
           docker-compose down &&
           docker-compose up --build -d"
 
-  notify:
+  notify: 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -73,15 +73,23 @@ jobs:
           COMMENTS=$(git log -1 --pretty=format:%b | tr -d '\n')
           echo "COMMIT_COMMENTS=${COMMENTS:-''}" >> $GITHUB_ENV
 
+      - name: Debug log
+        run: |
+          echo "Commit Message: ${{ env.COMMIT_MESSAGE }}"
+          echo "Commit Comments: ${{ env.COMMIT_COMMENTS }}"
+
       - name: Send commit message to Telegram
         run: | 
           cd notify
           MESSAGE="${{ env.COMMIT_MESSAGE }}"
           
           if [ -n "${{ env.COMMIT_COMMENTS }}" ]; then
-            if [[ ! "${{ env.COMMIT_MESSAGE }}" =~ "${{ env.COMMIT_COMMENTS }}" ]]; then
+            # Проверяем, что комментарий не содержится в сообщении о коммите
+            if ! echo "${{ env.COMMIT_MESSAGE }}" | grep -q "${{ env.COMMIT_COMMENTS }}"; then
               MESSAGE="$MESSAGE\nComments: ${{ env.COMMIT_COMMENTS }}"
             fi
           fi
           
+          echo "Final Message: $MESSAGE"  # Выводим финальное сообщение в лог
           python send_message_pipeline.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "$MESSAGE"
+
