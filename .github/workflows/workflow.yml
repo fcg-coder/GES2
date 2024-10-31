@@ -78,4 +78,9 @@ jobs:
       - name: Send commit message to Telegram
         run: | 
           cd notify
-          python send_message_pipeline.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "${{ env.COMMIT_MESSAGE }} Comments: ${{ env.COMMIT_COMMENTS }}"
+          if [ -z "${{ env.COMMIT_COMMENTS }}" ]; then
+            MESSAGE="${{ env.COMMIT_MESSAGE }}"
+          else
+            MESSAGE="${{ env.COMMIT_MESSAGE }}\nComments: ${{ env.COMMIT_COMMENTS }}"
+          fi
+          python send_message_pipeline.py ${{ secrets.TELEGRAM_BOT_TOKEN }} ${{ secrets.TELEGRAM_CHAT_ID }} "$MESSAGE"
