@@ -3,133 +3,135 @@ import axios from 'axios';
 
 const Search = ({ setResults }) => {
   const [query, setQuery] = useState('');
-  const [results, setLocalResults] = useState([]); // Локальное состояние для результатов
-  const [showResults, setShowResults] = useState(false); // Для управления видимостью результатов
+  const [results, setLocalResults] = useState([]);
+  const [showResults, setShowResults] = useState(false);
 
-  // Используем useEffect для выполнения поиска при каждом изменении запроса
   useEffect(() => {
     const search = async () => {
       if (query.length === 0) {
-        setLocalResults([]); // Очищаем результаты, если пустой запрос
-        setShowResults(false); // Скрываем результаты
+        setLocalResults([]);
+        setShowResults(false);
         return;
       }
 
-      setShowResults(true); // Показываем результаты
-      setLocalResults([]); // Очищаем старые результаты перед новым запросом
+      setShowResults(true);
+      setLocalResults([]);
 
       try {
-        const response = await axios.post(`http://localhost:9200/_search`, // Поиск по всем индексам
-          {
-            "query": {
-              "bool": {
-                "should": [
-                  {
-                    "match_phrase_prefix": {
-                      "name": {
-                        "query": query.toLowerCase(), // Нечувствительность к регистру
-                        "slop": 1 // Позволяет некоторую степень вариативности
-                      }
-                    }
-                  },
-                  {
-                    "match": {
-                      "name": {
-                        "query": query.toLowerCase(), // Нечувствительность к регистру
-                        "fuzziness": "AUTO" // Автоматическая нечеткость
-                      }
+        const response = await axios.post(`http://localhost:9200/_search`, {
+          query: {
+            bool: {
+              should: [
+                {
+                  match_phrase_prefix: {
+                    name: {
+                      query: query.toLowerCase(),
+                      slop: 1
                     }
                   }
-                ]
-              }
-            }
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json'
+                },
+                {
+                  match: {
+                    name: {
+                      query: query.toLowerCase(),
+                      fuzziness: "AUTO"
+                    }
+                  }
+                }
+              ]
             }
           }
-        );
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
 
-        // Проверяем ответ
         if (response.data && response.data.hits && response.data.hits.hits) {
           const formattedResults = response.data.hits.hits.map(hit => hit._source.name);
-          
-          // Убираем дублирующиеся результаты
           const uniqueResults = Array.from(new Set(formattedResults));
-          
-          // Сохраняем уникальные результаты в локальном состоянии и обновляем глобальные результаты
           setLocalResults(uniqueResults);
-          setResults(uniqueResults); // Обновляем глобальные результаты
+          setResults(uniqueResults);
         } else {
           console.warn("Нет результатов поиска:", response.data);
-          setShowResults(false); // Скрываем результаты, если нет данных
+          setShowResults(false);
         }
       } catch (error) {
         console.error("Ошибка при поиске:", error.message);
         if (error.response) {
           console.error("Ответ сервера:", error.response.data);
         }
-        setShowResults(false); // Скрываем результаты при ошибке
+        setShowResults(false);
       }
     };
 
     const debounceSearch = setTimeout(() => {
       search();
-    }, 300); // Дебаунс, чтобы предотвратить слишком частые запросы
+    }, 300);
 
-    return () => clearTimeout(debounceSearch); // Очищаем таймер при изменении запроса
-  }, [query]); // Запускать эффект при изменении query
+    return () => clearTimeout(debounceSearch);
+  }, [query, setResults]);
 
   return (
     <div>
-      <input 
-        type="text" 
-        placeholder="Search..." 
-        value={query} 
-        onChange={(e) => setQuery(e.target.value)} 
-        className="search-input"
-      />
-      {showResults && results.length > 0 && ( // Отображаем результаты только если они есть
+      <svg width="400" height="80" viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg" style={{ cursor: 'text' }}>
+        {/* Фон поиска */}
+        <rect x="20" y="20" width="360" height="40" rx="20" fill="none" stroke="white" strokeWidth="2" />
+
+        {/* Иконка лупы */}
+        <circle cx="50" cy="40" r="10" stroke="white" strokeWidth="2" fill="none" />
+        <line x1="57" y1="47" x2="65" y2="55" stroke="white" strokeWidth="2" />
+
+        {/* Поле ввода */}
+        <foreignObject x="70" y="25" width="300" height="30">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            style={{
+              width: '100%',
+              height: '100%',
+              fontSize: '16px',
+              border: 'none',
+              outline: 'none',
+              background: 'transparent',
+              color: 'white'
+            }}
+          />
+        </foreignObject>
+      </svg>
+
+      {showResults && results.length > 0 && (
         <div className="results-container">
           {results.map((result, index) => (
             <div key={index} className="result-item">{result}</div>
           ))}
         </div>
       )}
+
       <style jsx>{`
-        .search-input {
-          padding: 10px;
-          font-size: 16px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-          margin-bottom: 10px;
-          transition: border-color 0.3s;
-        }
-        .search-input:focus {
-          border-color: #007bff;
-          outline: none;
-        }
         .results-container {
           display: flex;
           flex-direction: column;
-          gap: 10px; /* Отступы между результатами */
-          opacity: 1; /* Устанавливаем начальную непрозрачность */
-          transition: opacity 0.5s ease; /* Плавное исчезновение */
+          gap: 10px;
+          opacity: 1;
+          transition: opacity 0.5s ease;
+          padding-top: 10px;
         }
         .result-item {
-          padding: 15px;
-          background-color: #2c3e50; /* Темный фон для результата */
-          color: white; /* Белый текст */
-          border-radius: 5px; /* Закругленные углы */
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Тень для эффекта */
-          opacity: 0; /* Начальное состояние - прозрачность */
-          animation: fadeIn 0.5s forwards; /* Анимация плавного появления */
+          padding: 10px 15px;
+          background-color: #333;
+          color: white;
+          border-radius: 5px;
+          font-size: 14px;
+          cursor: pointer;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          transition: background-color 0.3s ease;
+          background: none;
         }
-        @keyframes fadeIn {
-          to {
-            opacity: 1; /* Конечное состояние - полная непрозрачность */
-          }
+        .result-item:hover {
+          background-color: #444;
         }
       `}</style>
     </div>

@@ -5,8 +5,8 @@ import { getCurrentTheme } from '../themeConfig';
 import { ThemeProvider } from 'styled-components';
 import styled from 'styled-components';
 import Sidebar from './Sidebar';
+import Subcategory from './Subcategory';
 
-// Создаем стилизованный компонент MapContainer с использованием styled-components
 const MapContainer = styled.div`
   height: 100vh;
   width: 100vw;
@@ -77,112 +77,36 @@ const generateRandomData = () => {
     };
 };
 
-const YourComponent = ({ initialDataUrl }) => {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [history, setHistory] = useState([]);
-    const [isMapView, setIsMapView] = useState(true);
-
-    const loadData = (dataUrl) => {
-        try {
-            const randomData = generateRandomData();
-            setData(randomData);
-            setIsMapView(false);
-        } catch (error) {
-            setError(error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        loadData(initialDataUrl);
-    }, [initialDataUrl]);
-
-    const handleBackClick = () => {
-        if (history.length > 0) {
-            const previousData = history.pop();
-            setData(previousData);
-            setHistory([...history]);
-        } else {
-            setIsMapView(true);
-        }
-    };
-
-    const handleCircleClick = (nextDataUrl) => {
-        if (nextDataUrl) {
-            setHistory([...history, data]);
-            loadData(nextDataUrl);
-        }
-    };
-
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
-
-    if (isMapView) return <Map />;
-
-    const mapInternalPages = data?.map_internal_pages || [];
-
-    return (
-        <StyledSVGContainer>
-            <BackButton onClick={handleBackClick}>Back</BackButton>
-            <StyledSVG viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                {mapInternalPages.map((page) => (
-                    <StyledCircle
-                        key={page.id}
-                        cx={random(10, 90)}
-                        cy={random(10, 90)}
-                        r={page.size}
-                        size={page.size}
-                        onClick={() => handleCircleClick(page.nextDataUrl)}
-                    />
-                ))}
-            </StyledSVG>
-        </StyledSVGContainer>
-    );
-};
-
-const Category = ({ onClose }) => (
-    <YourComponent initialDataUrl={'http://localhost:3000/data1.json'} />
-);
-
 const Map = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [showFullScreen, setShowFullScreen] = useState(false);
+    const [currentDataUrl, setCurrentDataUrl] = useState(null);
     const svgRef = useRef(null);
     const theme = getCurrentTheme();
-
-    const handleMouseEnter = (event) => {
-        event.target.style.fill = 'wheat';
-    };
-
-    const handleMouseLeave = (event) => {
-        event.target.style.fill = '';
-    };
 
     const handleClick = (event) => {
         const target = event.target;
         const dataUrl = target.getAttribute('data-url');
-        console.log(dataUrl);
         if (dataUrl) {
+            setCurrentDataUrl(dataUrl); 
             setShowFullScreen(true);
+            history.pushState({ dataUrl }, '', window.location.href); // Добавляем состояние
         }
     };
 
-    const toggleSidebar = (open) => {
-        setSidebarOpen(open);
-    };
-
-    const handleFullScreenClose = () => {
-        setShowFullScreen(false);
-    };
+    useEffect(() => {
+        const handlePopState = () => {
+            setShowFullScreen(false); // Возвращаемся к виду карты
+        };
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+    }, []);
 
     return (
         <ThemeProvider theme={theme}>
             {!showFullScreen ? (
                 <MapContainer>
-                    <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
+                    <Sidebar open={sidebarOpen} toggleSidebar={(open) => setSidebarOpen(open)} />
                     <ReactSVG
                         src={iconSrc}
                         ref={svgRef}
@@ -190,10 +114,9 @@ const Map = () => {
                         beforeInjection={(svg) => {
                             Array.from(svg.querySelectorAll('path')).forEach((path) => {
                                 if (path.getAttribute('class') === 'cls-8') {
-                               
-                                    path.addEventListener('mouseenter', handleMouseEnter);
-                                    path.addEventListener('mouseleave', handleMouseLeave);
-                                    path.addEventListener('click', handleClick);
+                                    path.addEventListener('mouseenter', (event) => event.target.style.fill = 'wheat');
+                                    path.addEventListener('mouseleave', (event) => event.target.style.fill = '');
+                                    path.addEventListener('click', handleClick); 
                                 }
                             });
                         }}
@@ -202,8 +125,10 @@ const Map = () => {
             .svg-icon svg {
               transition: transform 0.3s ease-in-out;
               width: 80%;
-              height: 80vh;
-              margin: auto;
+              height: 90vh;
+              margin: 5vh
+
+
             }
             .svg-icon path {
               transition: fill 0.2s ease-in-out;
@@ -211,10 +136,13 @@ const Map = () => {
           `}</style>
                 </MapContainer>
             ) : (
-                <Category onClose={handleFullScreenClose} />
+                <Subcategory initialDataUrl={currentDataUrl} onClose={() => {
+                    setShowFullScreen(false); 
+                    history.back(); // При закрытии возвращаемся назад
+                }} />
             )}
         </ThemeProvider>
     );
 };
-
+ 
 export default Map;

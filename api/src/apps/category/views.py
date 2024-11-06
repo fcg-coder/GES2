@@ -35,6 +35,30 @@ def index(reuest):
         return JsonResponse({"error": str(e)}, status=500)
 
 
+def get_category_data(request, category_id):
+    try:
+        # Получаем категорию по ID
+        category = Category.objects.get(id=category_id)
+
+        # Если флаг для наличия родительской категории равен 0, то категория конечная
+        if category.flagForThePresenceOfAParent == 0:
+            # Если категория конечная, возвращаем страницы из модели Page
+            pages = Page.objects.filter(parentCategoryKey=category)
+            pages_data = [{"id": page.id, "nameOfPage": page.nameOfPage} for page in pages]
+            return JsonResponse({"category": {"id": category.id, "nameOfCategory": category.nameOfCategory}, "pages": pages_data})
+
+        else:
+            # Если категория не конечная, возвращаем подкатегории
+            subcategories = category.childCategoies.all()
+            subcategories_data = [{"id": subcategory.id, "nameOfCategory": subcategory.nameOfCategory} for subcategory in subcategories]
+            return JsonResponse({"category": {"id": category.id, "nameOfCategory": category.nameOfCategory}, "subcategories": subcategories_data})
+
+    except Category.DoesNotExist:
+        return JsonResponse({"error": "Category not found"}, status=404)
+    except Exception as e:
+        print("Error:", str(e))  # Вывод ошибки
+        return JsonResponse({"error": str(e)}, status=500)
+
 
 
 # Функция для генерации графа и его отправки на фронтенд
