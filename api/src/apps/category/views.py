@@ -40,25 +40,50 @@ def get_category_data(request, category_id):
         # Получаем категорию по ID
         category = Category.objects.get(id=category_id)
 
-        # Если флаг для наличия родительской категории равен 0, то категория конечная
-        if category.flagForThePresenceOfAParent == 0:
+        # Проверяем флаг для наличия внутренних записей (flagForInternalRecordings)
+        category_data = {
+            "id": category.id,
+            "nameOfCategory": category.nameOfCategory,
+            "flagForInternalRecordings": category.flagForInternalRecordings,  # Добавлен флаг
+            "flagForThePresenceOfAParent": category.flagForThePresenceOfAParent  # Добавлен флаг
+        }
+
+        # Если флаг для внутренних записей равен True, то категория конечная
+        if category.flagForInternalRecordings == False:
             # Если категория конечная, возвращаем страницы из модели Page
             pages = Page.objects.filter(parentCategoryKey=category)
             pages_data = [{"id": page.id, "nameOfPage": page.nameOfPage} for page in pages]
-            return JsonResponse({"category": {"id": category.id, "nameOfCategory": category.nameOfCategory}, "pages": pages_data})
+            
+            return JsonResponse({
+                "category": category_data,  # Возвращаем категорию с флагами
+                "pages": pages_data
+            })
 
         else:
             # Если категория не конечная, возвращаем подкатегории
             subcategories = category.childCategoies.all()
-            subcategories_data = [{"id": subcategory.id, "nameOfCategory": subcategory.nameOfCategory} for subcategory in subcategories]
-            return JsonResponse({"category": {"id": category.id, "nameOfCategory": category.nameOfCategory}, "subcategories": subcategories_data})
+            subcategories_data = []
+            
+            # Проходим по всем подкатегориям и добавляем флаги
+            for subcategory in subcategories:
+                subcategory_data = {
+                    "id": subcategory.id,
+                    "nameOfCategory": subcategory.nameOfCategory,
+                    "flagForInternalRecordings": subcategory.flagForInternalRecordings,  # Флаг подкатегории
+                    "flagForThePresenceOfAParent": subcategory.flagForThePresenceOfAParent  # Флаг подкатегории
+                }
+                subcategories_data.append(subcategory_data)
+
+            return JsonResponse({
+                "category": category_data,  # Возвращаем категорию с флагами
+                "subcategories": subcategories_data  # Возвращаем подкатегории с флагами
+            })
 
     except Category.DoesNotExist:
         return JsonResponse({"error": "Category not found"}, status=404)
     except Exception as e:
         print("Error:", str(e))  # Вывод ошибки
         return JsonResponse({"error": str(e)}, status=500)
-
 
 
 # Функция для генерации графа и его отправки на фронтенд
